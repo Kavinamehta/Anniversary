@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Two Player Story Mode 💛</title>
+  <meta name="description" content="An interactive anniversary journey – Sarthak + Kavina" />
+  <link rel="stylesheet" href="styles.css" />
+
+  <!-- Favicon: a small heart emoji -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💛</text></svg>" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════
+     BACKGROUND PARTICLES
+══════════════════════════════════════════ -->
+<canvas id="particles-canvas" aria-hidden="true"></canvas>
+
+<!-- ══════════════════════════════════════════
+     CONFETTI CANVAS
+══════════════════════════════════════════ -->
+<canvas id="confetti-canvas" aria-hidden="true"></canvas>
+
+<!-- ══════════════════════════════════════════
+     GAME HEADER (fixed, shown after start)
+══════════════════════════════════════════ -->
+<header id="game-header" role="banner" aria-label="Game progress and status">
+  <!-- Row 1: Progress Bar -->
+  <div class="progress-row">
+    <span class="progress-label">Relationship Progress</span>
+    <div class="progress-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+      <div class="progress-fill" id="progress-fill"></div>
+    </div>
+    <span class="progress-pct" id="progress-pct">0%</span>
+  </div>
+  <!-- Row 2: Status Pills -->
+  <div class="status-row">
+    <!-- Health -->
+    <div class="status-pill active" id="status-health" title="Relationship Health">
+      <span class="icon">❤️</span>
+      <span>Health</span>
+      <span class="status-health-bar"><span class="status-health-fill" id="health-fill-bar" style="width:40%"></span></span>
+    </div>
+    <!-- Distance -->
+    <div class="status-pill" id="status-distance" title="Distance Meter">
+      <span class="icon">⏳</span>
+      <span>Distance</span>
+      <span class="distance-bar"><span class="distance-fill" id="distance-fill-bar" style="width:0%"></span></span>
+    </div>
+    <!-- Co-Op -->
+    <div class="status-pill" id="status-coop" title="Co-Op Mode">
+      <span class="icon">🏠</span>
+      <span>Co-Op Active</span>
+      <span class="pulse-dot" style="margin-left:4px"></span>
+    </div>
+    <!-- Level Badge -->
+    <span class="level-badge" id="level-badge">Level 1</span>
+  </div>
+</header>
+
+<!-- ══════════════════════════════════════════
+     ACHIEVEMENT POPUP
+══════════════════════════════════════════ -->
+<div id="achievement-popup" role="alert" aria-live="polite">
+  <div class="achievement-inner">
+    <span class="achievement-icon" id="ach-icon">🏆</span>
+    <div class="achievement-text">
+      <div class="achievement-label">Achievement Unlocked</div>
+      <div class="achievement-name" id="ach-name">Title</div>
+      <div class="achievement-desc" id="ach-desc">Description</div>
+    </div>
+    <button class="btn-secondary" style="padding:4px 10px;font-size:0.72rem;border-radius:6px;flex-shrink:0"
+            onclick="closeAchievement()" aria-label="Close achievement">✕</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     EASTER EGG POPUP
+══════════════════════════════════════════ -->
+<div id="easter-egg-popup" role="dialog" aria-modal="true" aria-label="Secret message">
+  <div class="easter-egg-box">
+    <h3>🔐 You Found a Secret</h3>
+    <div class="divider"></div>
+    <p>
+      "Some people arrive and everything changes. Not loudly — just quietly, completely.
+      You didn't just unlock levels. You became the reason to keep playing.
+      Thanks for showing up at that wedding."
+    </p>
+    <div style="margin-top:20px">
+      <button class="btn-primary" onclick="closeEasterEgg()">Close Secret</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     MEMORY / COUNTRY MODAL
+══════════════════════════════════════════ -->
+<div id="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal()" aria-label="Close">✕</button>
+    <div class="modal-tag">Memory Unlocked ✦</div>
+    <h2 class="modal-title" id="modal-title">Title</h2>
+    <p class="modal-body" id="modal-body"></p>
+    <p id="modal-sub" style="font-size:0.8rem;color:var(--text-muted);margin-top:10px;font-style:italic;display:none"></p>
+    <span class="modal-xp" id="modal-xp" style="display:none"></span>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     GAME CONTENT
+══════════════════════════════════════════ -->
+<main id="game-content">
+
+  <!-- ════════════════════════════
+       🟢 LANDING SCREEN
+  ════════════════════════════ -->
+  <section id="screen-landing" class="screen active" aria-label="Landing screen">
+    <div class="landing-bg-text" aria-hidden="true">♡</div>
+    <div class="landing-inner">
+      <div class="landing-tag">🎮 Interactive Story Mode</div>
+      <h1 class="landing-title">Two Player<br><span>Story Mode</span></h1>
+      <div class="landing-info">
+        <div class="info-row">
+          <span class="info-label">Players</span>
+          <span class="info-sep">▸</span>
+          <span class="info-value">Sarthak + Kavina</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Mode</span>
+          <span class="info-sep">▸</span>
+          <span class="info-value">Co-Op</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Difficulty</span>
+          <span class="info-sep">▸</span>
+          <span class="info-value">Long Distance → Expert</span>
+        </div>
+      </div>
+      <button class="landing-btn" onclick="pressStart()" aria-label="Start the game">
+        <span class="btn-icon">▶</span>
+        Press Start
+      </button>
+      <div class="landing-hearts" aria-hidden="true">
+        <span>💛</span><span>✦</span><span>♡</span><span>✦</span><span>💛</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════════════════════
+       🟢 LEVEL 1 – THE MEET CUTE
+  ════════════════════════════ -->
+  <section id="screen-level1" class="screen" aria-label="Level 1: The Meet Cute">
+    <div class="level-wrapper">
+      <div class="level-header">
+        <div class="level-tag">🟢 Level 1</div>
+        <h2 class="level-title">The Meet Cute</h2>
+        <div class="level-date">08 August 2022</div>
+      </div>
+
+      <div class="narrative-card">
+        Two people attended a wedding in August 2022.<br>
+        It was meant to celebrate someone else's love story.<br>
+        <strong>Plot twist: it started theirs.</strong>
+      </div>
+
+      <div class="choices-label">What do you do?</div>
+      <div class="choices-grid">
+        <button class="choice-btn" onclick="makeChoice1('ignore')" aria-label="Choice: Ignore him">
+          <span class="choice-icon">🙄</span>
+          <span class="choice-text">Ignore him</span>
+          <span class="choice-arrow">›</span>
+        </button>
+        <button class="choice-btn" onclick="makeChoice1('polite')" aria-label="Choice: Be polite">
+          <span class="choice-icon">🤝</span>
+          <span class="choice-text">Be polite</span>
+          <span class="choice-arrow">›</span>
+        </button>
+        <button class="choice-btn" onclick="makeChoice1('talk')" aria-label="Choice: Actually talk">
+          <span class="choice-icon">💬</span>
+          <span class="choice-text">Actually talk</span>
+          <span class="choice-arrow">›</span>
+        </button>
+      </div>
+
+      <!-- Wrong outcome -->
+      <div class="outcome-box wrong" id="l1-wrong" style="display:none">
+        <p>⚠️ Alternate universe unlocked: We remain strangers.</p>
+        <div class="btn-row" style="margin-top:12px">
+          <button class="btn-secondary" onclick="retryLevel1()">↩ Try Again</button>
+        </div>
+      </div>
+
+      <!-- Correct outcome -->
+      <div class="outcome-box correct" id="l1-correct" style="display:none">
+        <p>✅ Good choice. The best one, actually.</p>
+      </div>
+
+      <!-- Points popup -->
+      <div class="points-popup" id="l1-points">
+        <span>✨</span> +10 Chemistry Points
+      </div>
+
+      <!-- Memory unlock -->
+      <div class="memory-section" id="l1-memory">
+        <div class="memory-title">💬 Memory Unlocked</div>
+        <p class="memory-text">"We talked. And then we didn't stop."</p>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn-primary hidden" id="l1-continue" onclick="goToLevel('level2')">
+          Continue to Level 2 ›
+        </button>
+      </div>
+
+      <!-- Easter egg hint -->
+      <div style="text-align:center;margin-top:24px">
+        <span class="locked-hint" onclick="showEasterEgg()" title="What happens if you try to skip?">
+          🔒 Try to skip ahead?
+        </span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════════════════════
+       🟢 LEVEL 2 – GERMANY MODE
+  ════════════════════════════ -->
+  <section id="screen-level2" class="screen" aria-label="Level 2: International Mode Activated">
+    <div class="level-wrapper">
+      <div class="level-header">
+        <div class="level-tag">🟢 Level 2</div>
+        <h2 class="level-title">International Mode<br>Activated</h2>
+        <div class="level-date">October 2022</div>
+      </div>
+
+      <!-- Animated map line -->
+      <div class="map-animation">
+        <div class="distance-visual">
+          <div class="dv-label">⏳ Distance Activated</div>
+          <div class="distance-map-line">
+            <div class="distance-city">
+              <span class="flag">🇮🇳</span>
+              <span>India</span>
+            </div>
+            <div class="distance-line-track">
+              <div class="distance-line-fill" id="l2-map-line-fill"></div>
+              <div class="distance-plane" id="l2-plane">✈️</div>
+            </div>
+            <div class="distance-city">
+              <span class="flag">🇩🇪</span>
+              <span>Germany</span>
+            </div>
+          </div>
+          <div class="distance-km">~7,800 km apart</div>
+        </div>
+      </div>
+
+      <div class="narrative-card">
+        He moved to Germany.<br>
+        Distance increased.<br>
+        <strong>So did intention.</strong>
+      </div>
+
+      <div class="choices-label">How do you survive long distance?</div>
+      <div class="choices-grid">
+        <button class="choice-btn" onclick="makeChoice2('stop')" aria-label="Choice: Stop talking">
+          <span class="choice-icon">📵</span>
+          <span class="choice-text">Stop talking</span>
+          <span class="choice-arrow">›</span>
+        </button>
+        <button class="choice-btn" onclick="makeChoice2('sometimes')" aria-label="Choice: Talk sometimes">
+          <span class="choice-icon">📞</span>
+          <span class="choice-text">Talk sometimes</span>
+          <span class="choice-arrow">›</span>
+        </button>
+        <button class="choice-btn" onclick="makeChoice2('everyday')" aria-label="Choice: Talk every day">
+          <span class="choice-icon">🌙</span>
+          <span class="choice-text">Talk every day</span>
+          <span class="choice-arrow">›</span>
+        </button>
+      </div>
+
+      <!-- Wrong outcome -->
+      <div class="outcome-box wrong" id="l2-wrong" style="display:none">
+        <p>❌ Wrong Choice.</p>
+        <div class="btn-row" style="margin-top:12px">
+          <button class="btn-secondary" onclick="retryLevel2()">↩ Try Again</button>
+        </div>
+      </div>
+
+      <!-- Unlocked memories -->
+      <div class="memory-section" id="l2-unlock">
+        <div class="memory-title">📞 Memories Unlocked</div>
+        <div class="memory-items">
+          <div class="memory-item">First late-night call — when you realized time zones were actually kind of romantic</div>
+          <div class="memory-item">First "I miss you" — said casually, meant deeply</div>
+          <div class="memory-item">First silly argument — about something that didn't matter at all</div>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn-primary hidden" id="l2-continue" onclick="goToLevel('level3')">
+          Continue to Level 3 ›
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════════════════════
+       🟢 LEVEL 3 – PROPOSAL BOSS
+  ════════════════════════════ -->
+  <section id="screen-level3" class="screen" aria-label="Level 3: A Proposal Appears">
+    <div class="level-wrapper">
+      <div class="level-header">
+        <div class="level-tag">⚔️ Level 3 – Boss Battle</div>
+        <h2 class="level-title">A Proposal Appears</h2>
+        <div class="level-date">March 2023</div>
+      </div>
+
+      <div class="narrative-card">
+        He flew thousands of kilometers for one question.<br>
+        <strong>The kind that changes everything.</strong>
+      </div>
+
+      <div class="choices-label">Your move:</div>
+      <div class="choices-grid">
+        <button class="choice-btn" onclick="makeChoice3('panic')" aria-label="Choice: Panic">
+          <span class="choice-icon">😱</span>
+          <span class="choice-text">Panic</span>
+          <span class="choice-arrow">›</span>
+        </button>
+        <button class="choice-btn" onclick="makeChoice3('think')" aria-label="Choice: Keep Thinking">
+          <span class="choice-icon">🤔</span>
+          <span class="choice-text">Keep Thinking</span>
+          <span class="choice-arrow">›</span>
+        </button>
+        <button class="choice-btn" onclick="makeChoice3('yes')" aria-label="Choice: Say yes">
+          <span class="choice-icon">💍</span>
+          <span class="choice-text">Say yes</span>
+          <span class="choice-arrow">›</span>
+        </button>
+      </div>
+
+      <!-- Panic outcome -->
+      <div class="outcome-box wrong" id="l3-panic" style="display:none">
+        <p>😅 Understandable. But also — try again.</p>
+        <div class="btn-row" style="margin-top:12px">
+          <button class="btn-secondary" onclick="retryLevel3('panic')">↩ Try Again</button>
+        </div>
+      </div>
+
+      <!-- Think outcome -->
+      <div class="outcome-box wrong" id="l3-think" style="display:none">
+        <p>🤔 He's still waiting. Give him an answer.</p>
+        <div class="btn-row" style="margin-top:12px">
+          <button class="btn-secondary" onclick="retryLevel3('think')">↩ Try Again</button>
+        </div>
+      </div>
+
+      <!-- YES outcome -->
+      <div class="memory-section" id="l3-yes">
+        <div class="memory-title">💍 The Answer</div>
+        <p class="memory-text">"Yes. Obviously, yes."</p>
+        <div class="photo-grid">
+          <div class="photo-slot"><span class="photo-icon">💍</span>Proposal Moment</div>
+          <div class="photo-slot"><span class="photo-icon">📸</span>Photo Memory</div>
+          <div class="photo-slot"><span class="photo-icon">🌹</span>That Night</div>
+        </div>
+      </div>
+
+      <div class="points-popup" id="l3-points">
+        <span>💍</span> +50 Commitment Points
+      </div>
+
+      <div class="btn-row">
+        <button class="btn-primary hidden" id="l3-continue" onclick="goToLevel('level4')">
+          Continue to Level 4 ›
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════════════════════
+       🟢 LEVEL 4 – PARENTS QUEST
+  ════════════════════════════ -->
+  <section id="screen-level4" class="screen" aria-label="Level 4: The Courage Quest">
+    <div class="level-wrapper">
+      <div class="level-header">
+        <div class="level-tag">🛡️ Level 4 – Courage Quest</div>
+        <h2 class="level-title">The Courage Quest</h2>
+      </div>
+
+      <div class="narrative-card">
+        Love is easy.<br>
+        <strong>Conversations are harder.</strong><br>
+        But some things are worth the nerves.
+      </div>
+
+      <div class="choices-label">Choose your next move:</div>
+      <div class="parents-grid">
+        <button class="parent-btn" id="pb-you" onclick="doParentAction('you')" aria-label="Talk to your parents">
+          <div class="pb-icon">👨‍👩‍👧</div>
+          <div class="pb-label">Talk to Your Parents</div>
+          <div class="pb-check">✅</div>
+        </button>
+        <button class="parent-btn" id="pb-me" onclick="doParentAction('me')" aria-label="Talk to my parents">
+          <div class="pb-icon">👨‍👩‍👦</div>
+          <div class="pb-label">Talk to My Parents</div>
+          <div class="pb-check">✅</div>
+        </button>
+        <button class="parent-btn" id="pb-miracle" onclick="doMiracle()" aria-label="Hope for a miracle">
+          <div class="pb-icon">🙏</div>
+          <div class="pb-label">Hope for Miracle</div>
+          <div class="pb-check">✅</div>
+        </button>
+      </div>
+
+      <!-- Success -->
+      <div class="status-change-banner" id="l4-success">
+        🎉 Parents Approval: <strong>SUCCESS</strong>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn-primary hidden" id="l4-continue" onclick="goToLevel('level5')">
+          Continue to Level 5 ›
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════════════════════
+       🟢 LEVEL 5 – ENGAGEMENT
+  ════════════════════════════ -->
+  <section id="screen-level5" class="screen" aria-label="Level 5: Permanent Bond Activated">
+    <div class="level-wrapper">
+      <div class="level-header">
+        <div class="level-tag">💍 Level 5 – Official Level-Up</div>
+        <h2 class="level-title">Permanent Bond<br>Activated</h2>
+        <div class="level-date">8 March 2024</div>
+      </div>
+
+      <div class="narrative-card">
+        8 March 2024.<br>
+        Not the beginning.<br>
+        Not the end.<br>
+        <strong>Just the official level-up.</strong>
+      </div>
+
+      <!-- Engagement photos -->
+      <div class="event-photo-section">
+        <div class="eps-title">📸 Engagement Day</div>
+        <div class="photo-grid">
+          <div class="photo-slot"><span class="photo-icon">💍</span>The Ring</div>
+          <div class="photo-slot"><span class="photo-icon">📸</span>With Family</div>
+          <div class="photo-slot"><span class="photo-icon">✨</span>That Moment</div>
+          <div class="photo-slot"><span class="photo-icon">🌸</span>Celebration</div>
+        </div>
+      </div>
+
+      <div class="memory-section visible">
+        <div class="memory-title">💛 Status Update</div>
+        <p class="memory-text">
+          "It's official now. On paper, in front of everyone.
+          But honestly — it had been official long before that."
+        </p>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn-primary" onclick="goToLevel('level6')">
+          Continue to Level 6 ›
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════════════════════
+       🟢 LEVEL 6 – CO-OP MODE
+  ════════════════════════════ -->
+  <section id="screen-level6" class="screen" aria-label="Level 6: Co-Op Mode IRL">
+    <div class="level-wrapper">
+      <div class="level-header">
+        <div class="level-tag">🏠 Level 6 – Co-Op Mode</div>
+        <h2 class="level-title">Co-Op Mode IRL</h2>
+        <div class="level-date">May 2024</div>
+      </div>
+
+      <!-- Status change banner -->
+      <div class="status-change-banner" id="l6-banner">
+        🏠 Distance Meter: <strong>Offline</strong> · Co-Op Mode: <strong>ACTIVE</strong>
+      </div>
+
+      <div class="narrative-card">
+        No more time zones.<br>
+        No more countdowns.<br>
+        <strong>Just shared space.</strong>
+      </div>
+
+      <div class="choices-label">Explore your first co-op moments:</div>
+      <div class="coop-grid">
+        <button class="coop-btn" id="coop-grocery" onclick="doCoopAction('grocery')" aria-label="First grocery raid">
+          <div class="cb-icon">🛒</div>
+          <div class="cb-label">First Grocery Raid</div>
+        </button>
+        <button class="coop-btn" id="coop-cook" onclick="doCoopAction('cook')" aria-label="First cooked meal">
+          <div class="cb-icon">🍳</div>
+          <div class="cb-label">First Cooked Meal</div>
+        </button>
+        <button class="coop-btn" id="coop-fight" onclick="doCoopAction('fight')" aria-label="First real fight">
+          <div class="cb-icon">🌩️</div>
+          <div class="cb-label">First Real Fight</div>
+        </button>
+        <button class="coop-btn" id="coop-sunday" onclick="doCoopAction('sunday')" aria-label="First lazy sunday">
+          <div class="cb-icon">☀️</div>
+          <div class="cb-label">First Lazy Sunday</div>
+        </button>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn-primary hidden" id="l6-continue" onclick="goToLevel('level7')">
+          Continue to Level 7 ›
+        </button>
+      </div>
+
+      <div style="text-align:center;margin-top:8px">
+        <button class="btn-secondary" onclick="goToLevel('level7')" style="opacity:0.6;font-size:0.8rem">
+          Skip to Level 7 (unlock all memories first!)
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════════════════════
+       🟢 LEVEL 7 – EUROPE MAP
+  ════════════════════════════ -->
+  <section id="screen-level7" class="screen" aria-label="Level 7: Europe Expansion Pack">
+    <div class="level-wrapper">
+      <div class="level-header">
+        <div class="level-tag">🗺️ Level 7 – Expansion Pack</div>
+        <h2 class="level-title">Europe<br>Expansion Pack</h2>
+      </div>
+
+      <div class="narrative-card">
+        Two people. One continent.<br>
+        Many trains, a few wrong turns, and<br>
+        <strong>entirely too many good memories.</strong>
+      </div>
+
+      <!-- Europe Map -->
+      <div class="europe-map-container">
+        <div class="map-label">🌍 Click a country to unlock its memory</div>
+        <div class="europe-svg-wrapper">
+          <!-- Simplified Europe SVG outline -->
+          <svg viewBox="0 0 500 420" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <defs>
+              <linearGradient id="mapGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" style="stop-color:#F7E7E7;stop-opacity:1" />
+                <stop offset="100%" style="stop-color:#F0E4B8;stop-opacity:1" />
+              </linearGradient>
+            </defs>
+            <!-- Ocean background -->
+            <rect width="500" height="420" fill="#EAF2FB" rx="12"/>
+            <!-- Simplified Europe landmass -->
+            <path d="
+              M 60 80
+              L 80 60 L 120 55 L 150 45 L 180 50 L 210 40
+              L 240 45 L 270 38 L 300 42 L 330 38
+              L 360 50 L 380 60 L 395 75 L 405 90
+              L 410 110 L 400 130 L 410 150 L 400 165
+              L 390 180 L 380 195 L 370 210
+              L 360 225 L 355 240 L 350 255
+              L 355 270 L 345 280 L 335 285
+              L 320 275 L 310 280 L 300 290
+              L 290 300 L 280 310 L 270 320
+              L 260 330 L 255 345 L 250 360
+              L 245 375 L 250 390 L 240 400
+              L 225 395 L 215 385 L 205 375
+              L 195 360 L 185 350 L 170 355
+              L 155 360 L 140 355 L 130 345
+              L 120 335 L 115 320 L 110 305
+              L 100 295 L 90 285 L 80 270
+              L 75 255 L 70 240 L 65 225
+              L 60 210 L 55 195 L 50 180
+              L 48 165 L 50 150 L 55 135
+              L 50 120 L 52 105 L 60 90 Z
+            " fill="url(#mapGrad)" stroke="#D4A5A5" stroke-width="1.5" opacity="0.9"/>
+            <!-- Scandinavia rough shape -->
+            <path d="
+              M 200 40 L 210 30 L 225 20 L 245 18
+              L 265 20 L 280 28 L 290 38
+              L 270 38 L 240 45 L 210 40 Z
+            " fill="url(#mapGrad)" stroke="#D4A5A5" stroke-width="1" opacity="0.8"/>
+            <!-- UK/Ireland rough shape -->
+            <path d="
+              M 55 100 L 45 95 L 38 105 L 42 120
+              L 52 128 L 60 118 L 60 105 Z
+            " fill="url(#mapGrad)" stroke="#D4A5A5" stroke-width="1" opacity="0.8"/>
+            <!-- Italy boot -->
+            <path d="
+              M 260 270 L 265 285 L 270 300 L 275 315
+              L 280 330 L 278 345 L 285 355
+              L 290 360 L 295 355 L 290 340
+              L 285 325 L 282 310 L 278 295 Z
+            " fill="url(#mapGrad)" stroke="#D4A5A5" stroke-width="1" opacity="0.8"/>
+
+            <!-- Grid lines (subtle) -->
+            <line x1="0" y1="210" x2="500" y2="210" stroke="#D4A5A5" stroke-width="0.5" opacity="0.3" stroke-dasharray="4,8"/>
+            <line x1="250" y1="0" x2="250" y2="420" stroke="#D4A5A5" stroke-width="0.5" opacity="0.3" stroke-dasharray="4,8"/>
+          </svg>
+
+          <!-- Map Pins -->
+          <!-- Germany: ~center-right of map -->
+          <button class="map-pin" style="left:53%;top:43%" onclick="openMapPin('germany')"
+                  aria-label="Germany - Click to view memory">
+            <span class="pin-icon">📍</span>
+            <span class="pin-label">🇩🇪 Germany</span>
+          </button>
+
+          <!-- France: ~left-center -->
+          <button class="map-pin" style="left:33%;top:47%" onclick="openMapPin('france')"
+                  aria-label="France - Click to view memory">
+            <span class="pin-icon">📍</span>
+            <span class="pin-label">🇫🇷 France</span>
+          </button>
+
+          <!-- Netherlands: north-center -->
+          <button class="map-pin" style="left:44%;top:28%" onclick="openMapPin('netherlands')"
+                  aria-label="Netherlands - Click to view memory">
+            <span class="pin-icon">📍</span>
+            <span class="pin-label">🇳🇱 Netherlands</span>
+          </button>
+
+          <!-- Austria: center-right -->
+          <button class="map-pin" style="left:62%;top:51%" onclick="openMapPin('austria')"
+                  aria-label="Austria - Click to view memory">
+            <span class="pin-icon">📍</span>
+            <span class="pin-label">🇦🇹 Austria</span>
+          </button>
+
+          <!-- Czech Republic: northeast of Germany -->
+          <button class="map-pin" style="left:65%;top:37%" onclick="openMapPin('czech')"
+                  aria-label="Czech Republic - Click to view memory">
+            <span class="pin-icon">📍</span>
+            <span class="pin-label">🇨🇿 Prague</span>
+          </button>
+
+          <!-- Italy – locked -->
+          <button class="map-pin locked" style="left:52%;top:68%" onclick="openMapPin('italy')"
+                  aria-label="Italy - Locked: Future DLC">
+            <span class="pin-icon">🔒</span>
+            <span class="pin-label">🇮🇹 Italy</span>
+          </button>
+
+          <!-- Spain – locked -->
+          <button class="map-pin locked" style="left:24%;top:62%" onclick="openMapPin('spain')"
+                  aria-label="Spain - Locked: Future DLC">
+            <span class="pin-icon">🔒</span>
+            <span class="pin-label">🇪🇸 Spain</span>
+          </button>
+
+          <!-- Greece – locked -->
+          <button class="map-pin locked" style="left:73%;top:70%" onclick="openMapPin('greece')"
+                  aria-label="Greece - Locked: Future DLC">
+            <span class="pin-icon">🔒</span>
+            <span class="pin-label">🇬🇷 Greece</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn-primary" onclick="goToLevel('level8')">
+          Continue to Level 8 ›
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════════════════════
+       🟢 LEVEL 8 – SIDE QUESTS
+  ════════════════════════════ -->
+  <section id="screen-level8" class="screen" aria-label="Level 8: Everyday Side Quests">
+    <div class="level-wrapper">
+      <div class="level-header">
+        <div class="level-tag">⚡ Level 8 – Side Quests</div>
+        <h2 class="level-title">Everyday<br>Side Quests</h2>
+      </div>
+
+      <div class="narrative-card">
+        Not every chapter is a big moment.<br>
+        Most of the story lives in the small ones.<br>
+        <strong>These are those.</strong>
+      </div>
+
+      <div class="choices-label">Select a quest to begin:</div>
+      <div class="quest-grid">
+        <button class="quest-card" onclick="openQuest('grocery')" aria-label="Grocery Raid quest">
+          <div class="qc-icon">🛒</div>
+          <div class="qc-name">Grocery Raid</div>
+          <div class="qc-diff">Difficulty: Medium</div>
+          <div class="qc-reward">Reward: Full fridge</div>
+        </button>
+        <button class="quest-card" onclick="openQuest('cooking')" aria-label="Cooking Challenge quest">
+          <div class="qc-icon">🍳</div>
+          <div class="qc-name">Cooking Challenge</div>
+          <div class="qc-diff">Difficulty: Variable</div>
+          <div class="qc-reward">Reward: Edible food</div>
+        </button>
+        <button class="quest-card" onclick="openQuest('pokemon')" aria-label="Pokémon Go Hunt quest">
+          <div class="qc-icon">📱</div>
+          <div class="qc-name">Pokémon Go Hunt</div>
+          <div class="qc-diff">Difficulty: Addictive</div>
+          <div class="qc-reward">Reward: Steps + bragging</div>
+        </button>
+        <button class="quest-card" onclick="openQuest('study')" aria-label="Study Mode quest">
+          <div class="qc-icon">📚</div>
+          <div class="qc-name">Study Mode</div>
+          <div class="qc-diff">Difficulty: High</div>
+          <div class="qc-reward">Reward: Actually learned stuff</div>
+        </button>
+        <button class="quest-card" onclick="openQuest('cleaning')" aria-label="Cleaning Boss Fight quest">
+          <div class="qc-icon">🧹</div>
+          <div class="qc-name">Cleaning Boss Fight</div>
+          <div class="qc-diff">Difficulty: High</div>
+          <div class="qc-reward">Reward: Peaceful Sunday</div>
+        </button>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn-primary" onclick="initFinal()">
+          Final Chapter ›
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════════════════════
+       🏆 FINAL SCREEN
+  ════════════════════════════ -->
+  <section id="screen-final" class="screen" aria-label="Final screen: Game Status Ongoing">
+    <div class="level-wrapper">
+      <div class="level-header">
+        <div class="level-tag">🏆 Endgame (For Now)</div>
+        <h2 class="level-title">Game Status:<br>Ongoing</h2>
+      </div>
+
+      <div class="narrative-card">
+        3.5 years since we pressed Start.<br>
+        Still playing.<br>
+        <strong>Still choosing each other.</strong>
+      </div>
+
+      <!-- Stats -->
+      <div class="final-stats">
+        <div class="stat-card">
+          <div class="sc-value">3.5</div>
+          <div class="sc-label">Years Playing</div>
+        </div>
+        <div class="stat-card">
+          <div class="sc-value">8</div>
+          <div class="sc-label">Levels Cleared</div>
+        </div>
+        <div class="stat-card">
+          <div class="sc-value">5+</div>
+          <div class="sc-label">Countries Visited</div>
+        </div>
+        <div class="stat-card">
+          <div class="sc-value">∞</div>
+          <div class="sc-label">Memories Made</div>
+        </div>
+      </div>
+
+      <!-- Final progress bar -->
+      <div class="final-progress-row">
+        <div class="final-progress-track">
+          <div class="final-progress-fill" id="final-progress-fill"></div>
+        </div>
+        <div class="final-progress-label">Relationship Progress: 100% (for now)</div>
+      </div>
+
+      <div class="memory-section visible" style="margin-top:16px">
+        <div class="memory-title">💛 Total Achievements</div>
+        <div class="memory-items">
+          <div class="memory-item">Survived Time Zones</div>
+          <div class="memory-item">Boss Battle Cleared</div>
+          <div class="memory-item">Patience +100</div>
+          <div class="memory-item">Living Together IRL</div>
+          <div class="memory-item">International Legends</div>
+          <div class="memory-item">Domestic Legends</div>
+        </div>
+      </div>
+
+      <div class="btn-row" style="margin-top:24px">
+        <button class="next-level-btn" aria-label="Next level coming soon" disabled>
+          ⏳ Next Level Unlocking Soon…
+        </button>
+      </div>
+
+      <div style="text-align:center;margin-top:24px">
+        <button class="btn-secondary" onclick="pressStart()" style="font-size:0.82rem">
+          ↩ Play Again from Start
+        </button>
+      </div>
+
+      <div class="landing-hearts" style="margin-top:36px" aria-hidden="true">
+        <span>💛</span><span>✦</span><span>♡</span><span>✦</span><span>💛</span>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<script src="script.js"></script>
+</body>
+</html>
