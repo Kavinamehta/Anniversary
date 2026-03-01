@@ -19,6 +19,13 @@ const state = {
   sideQuestsDone: {},
   l2MapInit: false,
   l7MapInit: false,
+  // Scoring system
+  score: 0,
+  earnedBadges: [],
+  bonusQuestsDone: {},
+  countriesVisited: [],
+  l5Scored: false,
+  l4Scored: false,
 };
 
 /* ── Level Config ────────────────────────── */
@@ -47,12 +54,74 @@ const PREV_LEVEL = {
   final:  'level7',
 };
 
+/* ── Score Config ────────────────────────── */
+const SCORE_CONFIG = {
+  level1:       { points: 10,  label: 'Level 1 – Meet Cute' },
+  level2:       { points: 15,  label: 'Level 2 – Long Distance' },
+  level3:       { points: 50,  label: 'Level 3 – Proposal' },
+  level4:       { points: 20,  label: 'Level 4 – Parents' },
+  level5:       { points: 10,  label: 'Level 5 – Engagement' },
+  coop_grocery: { points: 10,  label: 'Co-Op: Grocery Raid' },
+  coop_cook:    { points: 10,  label: 'Co-Op: First Meal' },
+  coop_fight:   { points: 10,  label: 'Co-Op: First Fight' },
+  coop_sunday:  { points: 10,  label: 'Co-Op: Lazy Sunday' },
+  bonus_grocery:  { points: 5, label: 'Bonus: Grocery Raid' },
+  bonus_cooking:  { points: 5, label: 'Bonus: Cooking' },
+  bonus_pokemon:  { points: 5, label: 'Bonus: Pokémon Go' },
+  bonus_study:    { points: 5, label: 'Bonus: Study Mode' },
+  bonus_cleaning: { points: 5, label: 'Bonus: Cleaning' },
+  travel_germany:     { points: 10, label: 'Travel: Germany' },
+  travel_france:      { points: 10, label: 'Travel: France' },
+  travel_netherlands: { points: 10, label: 'Travel: Netherlands' },
+  travel_austria:     { points: 10, label: 'Travel: Austria' },
+  travel_czech:       { points: 10, label: 'Travel: Czech Republic' },
+  sq_doubt:    { points: 10, label: 'Side Quest: The Doubt Level' },
+  sq_latenight:{ points: 10, label: 'Side Quest: 11:30 PM Calls' },
+  sq_goa:      { points: 10, label: 'Side Quest: Goa' },
+  sq_distance_mini: { points: 10, label: 'Side Quest: Mini Distance' },
+};
+
+const MAX_SCORE = Object.values(SCORE_CONFIG).reduce((sum, c) => sum + c.points, 0);
+
+/* ── All Possible Badges ────────────────── */
+const ALL_BADGES = [
+  { id: 'time_zones',    icon: '🌍', name: 'Survived Time Zones',    desc: 'Long distance? No problem.' },
+  { id: 'boss_battle',   icon: '💍', name: 'Boss Battle Cleared',    desc: '+50 Commitment Points' },
+  { id: 'patience',      icon: '🏅', name: 'Patience +100',          desc: 'Both families on board.' },
+  { id: 'coop_irl',      icon: '🏠', name: 'Living Together IRL',    desc: 'Co-Op Mode: Fully Active' },
+  { id: 'travel_germany',     icon: '✈️', name: 'Germany Explored',      desc: 'Home base unlocked.' },
+  { id: 'travel_france',      icon: '✈️', name: 'France Explored',       desc: 'Croissants acquired.' },
+  { id: 'travel_netherlands', icon: '✈️', name: 'Netherlands Explored',  desc: 'Stroopwafels secured.' },
+  { id: 'travel_austria',     icon: '✈️', name: 'Austria Explored',      desc: 'Sachertorte tasted.' },
+  { id: 'travel_czech',       icon: '✈️', name: 'Czech Republic Explored', desc: 'Prague at golden hour.' },
+  { id: 'sq_doubt',      icon: '🛡️', name: 'Trust Shield +20',       desc: 'The Doubt Level cleared.' },
+  { id: 'sq_latenight',  icon: '📞', name: 'Night Owl Badge',        desc: '11:30 PM calls survived.' },
+  { id: 'sq_goa',        icon: '🏖️', name: 'Goa Memory Unlocked',    desc: 'Beach expansion complete.' },
+  { id: 'sq_distance_mini', icon: '🚂', name: 'Close-Range Survivor', desc: 'Mini distance mode cleared.' },
+  { id: 'story_ongoing', icon: '🏆', name: 'Story Mode: Ongoing',    desc: '3.5 years and counting.' },
+];
+
 /* ── Side-Quest Levels ───────────────────── */
 const SIDE_QUEST_LEVELS = ['level2', 'level3', 'level6'];
 
 /* ── DOM Helpers ─────────────────────────── */
 const $  = (sel, ctx = document) => ctx.querySelector(sel);
 const $$ = (sel, ctx = document) => [...ctx.querySelectorAll(sel)];
+
+/* ── Score & Badge Helpers ────────────────── */
+function addScore(key) {
+  const cfg = SCORE_CONFIG[key];
+  if (!cfg) return;
+  state.score += cfg.points;
+}
+
+function awardBadge(id) {
+  if (state.earnedBadges.find(b => b.id === id)) return; // no duplicates
+  const badge = ALL_BADGES.find(b => b.id === id);
+  if (!badge) return;
+  state.earnedBadges.push({ ...badge });
+  showAchievement(badge.icon, badge.name, badge.desc);
+}
 
 /* ── Init ────────────────────────────────── */
 document.addEventListener('DOMContentLoaded', () => {
@@ -111,28 +180,42 @@ function updateStatusBar(levelId) {
   const distancePill = $('#status-distance');
   const coopPill     = $('#status-coop');
 
-  if (levelId === 'level2' || levelId === 'level3' || levelId === 'level4') {
+  if (levelId === 'level1') {
+    // Level 1: no distance, no co-op
+    distancePill.classList.remove('active');
+    distancePill.classList.add('hidden');
+    coopPill.classList.remove('active');
+    coopPill.classList.add('hidden');
+  } else if (levelId === 'level2' || levelId === 'level3' || levelId === 'level4') {
     state.distanceActive = true;
     state.distanceValue  = levelId === 'level2' ? 85 : levelId === 'level3' ? 65 : 45;
     distancePill.classList.add('active');
     distancePill.classList.remove('hidden');
     $('#distance-fill-bar').style.width = state.distanceValue + '%';
     coopPill.classList.remove('active');
+    coopPill.classList.add('hidden');
   } else if (levelId === 'level5') {
     state.distanceValue = 20;
     distancePill.classList.add('active');
     distancePill.classList.remove('hidden');
     $('#distance-fill-bar').style.width = '20%';
     coopPill.classList.remove('active');
+    coopPill.classList.add('hidden');
   } else if (['level6','bonus','level7','final'].includes(levelId)) {
     state.distanceActive = false;
     state.coopActive = true;
     distancePill.classList.add('hidden');
     coopPill.classList.add('active');
     coopPill.classList.remove('hidden');
+    // Update co-op fill bar based on current progress
+    const doneCount = ['grocery','cook','fight','sunday'].filter(k => state.coopDone[k]).length;
+    const coopFill = $('#coop-fill-bar');
+    if (coopFill) coopFill.style.width = (doneCount / 4 * 100) + '%';
   } else {
-    distancePill.classList.remove('active', 'hidden');
+    distancePill.classList.remove('active');
+    distancePill.classList.add('hidden');
     coopPill.classList.remove('active');
+    coopPill.classList.add('hidden');
     $('#distance-fill-bar').style.width = '0%';
   }
 }
@@ -172,6 +255,8 @@ function makeChoice1(choice) {
     memory.classList.remove('visible');
     pointsPop.classList.remove('visible');
     if (gallery) gallery.classList.remove('visible');
+    state.relationshipHealth = Math.max(0, state.relationshipHealth - 5);
+    updateHealthBar();
   } else if (choice === 'talk') {
     correctBox.style.display = 'block';
     state.relationshipHealth = Math.min(100, state.relationshipHealth + 10);
@@ -181,6 +266,7 @@ function makeChoice1(choice) {
     continueBtn.classList.remove('hidden');
     state.level1Done = true;
     if (gallery) gallery.classList.add('visible');
+    addScore('level1');
   }
 }
 
@@ -256,13 +342,16 @@ function makeChoice2(choice) {
     wrongMsg.querySelector('p').textContent = '❌ Wrong choice. Try Again.';
     continueBtn.classList.add('hidden');
     if (gallery) gallery.classList.remove('visible');
+    state.relationshipHealth = Math.max(0, state.relationshipHealth - 5);
+    updateHealthBar();
   } else if (choice === 'everyday') {
     unlockSec.classList.add('visible');
     continueBtn.classList.remove('hidden');
     state.relationshipHealth = Math.min(100, state.relationshipHealth + 15);
     updateHealthBar();
     if (gallery) gallery.classList.add('visible');
-    setTimeout(() => showAchievement('🌍', 'Survived Time Zones', 'Long distance? No problem.'), 600);
+    addScore('level2');
+    setTimeout(() => awardBadge('time_zones'), 600);
   }
 }
 
@@ -287,10 +376,14 @@ function makeChoice3(choice) {
     panicMsg.style.display = 'block';
     continueBtn.classList.add('hidden');
     if (gallery) gallery.classList.remove('visible');
+    state.relationshipHealth = Math.max(0, state.relationshipHealth - 5);
+    updateHealthBar();
   } else if (choice === 'think') {
     thinkMsg.style.display = 'block';
     continueBtn.classList.add('hidden');
     if (gallery) gallery.classList.remove('visible');
+    state.relationshipHealth = Math.max(0, state.relationshipHealth - 5);
+    updateHealthBar();
   } else if (choice === 'yes') {
     yesSection.classList.add('visible');
     pointsPop.classList.add('visible');
@@ -299,7 +392,8 @@ function makeChoice3(choice) {
     updateHealthBar();
     launchConfetti();
     if (gallery) gallery.classList.add('visible');
-    setTimeout(() => showAchievement('💍', 'Boss Battle Cleared', '+50 Commitment Points'), 1000);
+    addScore('level3');
+    setTimeout(() => awardBadge('boss_battle'), 1000);
   }
 }
 
@@ -326,11 +420,13 @@ function doParentAction(type) {
 
   openModal(memTitle[type], memBody[type], null, null);
 
-  if (state.parentsDone.you && state.parentsDone.me) {
+  if (state.parentsDone.you && state.parentsDone.me && !state.l4Scored) {
+    state.l4Scored = true;
+    addScore('level4');
     setTimeout(() => {
       $('#l4-success').classList.add('visible');
       $('#l4-continue').classList.remove('hidden');
-      showAchievement('🏅', 'Patience +100', 'Both families on board.');
+      awardBadge('patience');
     }, 400);
   }
 }
@@ -344,6 +440,10 @@ function doMiracle() {
 /* ── Level 5 – Engagement ────────────────── */
 function initLevel5() {
   launchConfetti();
+  if (!state.l5Scored) {
+    state.l5Scored = true;
+    addScore('level5');
+  }
 }
 
 /* ── Level 6 – Co-Op Mode ────────────────── */
@@ -387,14 +487,22 @@ function doCoopAction(type) {
 
   openModal(m.title, m.body, null, m.xp, photos[type] || null);
 
-  state.coopDone[type] = true;
+  if (!state.coopDone[type]) {
+    state.coopDone[type] = true;
+    addScore('coop_' + type);
+  }
   $(`#coop-${type}`).classList.add('unlocked');
 
-  const allDone = ['grocery','cook','fight','sunday'].every(k => state.coopDone[k]);
+  // Update co-op fill bar
+  const doneCount = ['grocery','cook','fight','sunday'].filter(k => state.coopDone[k]).length;
+  const coopFill = $('#coop-fill-bar');
+  if (coopFill) coopFill.style.width = (doneCount / 4 * 100) + '%';
+
+  const allDone = doneCount === 4;
   if (allDone) {
     setTimeout(() => {
       $('#l6-continue').classList.remove('hidden');
-      showAchievement('🏠', 'Living Together IRL', 'Co-Op Mode: Fully Active');
+      awardBadge('coop_irl');
     }, 400);
   }
 }
@@ -513,8 +621,10 @@ function openMapPin(country) {
   const loc = MAP_LOCATIONS[country];
   if (!loc) return;
   openModal(loc.title, loc.body, null, loc.xp, loc.photos || null);
-  if (!loc.locked) {
-    setTimeout(() => showAchievement('✈️', 'Travel XP Gained', loc.title.replace(/^[^\w]+ /, '')), 500);
+  if (!loc.locked && !state.countriesVisited.includes(country)) {
+    state.countriesVisited.push(country);
+    addScore('travel_' + country);
+    setTimeout(() => awardBadge('travel_' + country), 500);
   }
 }
 
@@ -565,6 +675,10 @@ const QUESTS = {
     body: 'Every grocery run starts with a list and ends with several items that were definitely not on it. The snack aisle is a lawless zone. No one is safe.',
     skill: 'Skill Gained: Resource Management',
     reward: 'Reward: Full fridge (briefly)',
+    photos: [
+      { icon: '🛒', label: 'The haul' },
+      { icon: '🧾', label: 'The receipt' },
+    ],
   },
   cooking: {
     title: '🍳 Cooking Challenge',
@@ -572,6 +686,10 @@ const QUESTS = {
     body: 'Some days it\'s a proper meal with actual effort. Other days it\'s "we\'re having toast and calling it dinner." Both count. Progress is progress.',
     skill: 'Skill Gained: Culinary Creativity',
     reward: 'Reward: Not eating out (sometimes)',
+    photos: [
+      { icon: '🍽️', label: 'The masterpiece' },
+      { icon: '😅', label: 'The attempt' },
+    ],
   },
   pokemon: {
     title: '📱 Pokémon Go Hunt',
@@ -579,6 +697,10 @@ const QUESTS = {
     body: 'Walking has never felt more purposeful. "Just one more stop" is always a lie. We have walked 3km in the wrong direction because of a rare spawn and we regret nothing.',
     skill: 'Skill Gained: Navigation (debatable)',
     reward: 'Reward: Steps count + bragging rights',
+    photos: [
+      { icon: '🗺️', label: 'The adventure' },
+      { icon: '✨', label: 'The catch' },
+    ],
   },
   study: {
     title: '📚 Study Mode',
@@ -586,6 +708,10 @@ const QUESTS = {
     body: 'The two-person study session. One person is focused. The other has opened four other tabs. Someone always needs a snack break. Somehow things still get done.',
     skill: 'Skill Gained: Focus (eventually)',
     reward: 'Reward: Stuff actually learned',
+    photos: [
+      { icon: '📖', label: 'Deep focus mode' },
+      { icon: '☕', label: 'Fuel for the grind' },
+    ],
   },
   cleaning: {
     title: '🧹 Cleaning Boss Fight',
@@ -593,13 +719,21 @@ const QUESTS = {
     body: 'Cleaning Boss Fight requires coordination, negotiation, and the mutual agreement that yes, the bathroom needs to happen. Battle music optional but recommended. Victory: a peaceful Sunday.',
     skill: 'Skill Gained: Teamwork +25',
     reward: 'Reward: Peaceful Sunday',
+    photos: [
+      { icon: '🫧', label: 'Before & after' },
+      { icon: '🏆', label: 'Victory pose' },
+    ],
   },
 };
 
 function openQuest(id) {
   const q = QUESTS[id];
   if (!q) return;
-  openModal(q.title, q.body, `${q.skill} · ${q.reward}`, 'Side Quest Complete');
+  openModal(q.title, q.body, `${q.skill} · ${q.reward}`, 'Side Quest Complete', q.photos);
+  if (!state.bonusQuestsDone[id]) {
+    state.bonusQuestsDone[id] = true;
+    addScore('bonus_' + id);
+  }
 }
 
 /* ══════════════════════════════════════════
@@ -645,10 +779,32 @@ const SIDE_QUESTS = {
       tag: 'SIDE QUEST · LEVEL 3',
       narrative: '"Before the proposal, there was Goa. Sand, sunsets, and the kind of silence that\'s actually comfortable."',
       tropical: true,
-      choices: [
-        { label: '🍹 Stay at the beach bar all day', correct: false, response: '❌ Fun, but you missed the sunset walk. That\'s where the memory was.' },
-        { label: '🌅 Take the sunset walk', correct: true, response: '✅ Barefoot, quiet, with the waves doing most of the talking. This is where it clicked.' },
-        { label: '📸 Take photos the whole time', correct: false, response: '❌ 200 photos and not one real moment. Put the phone down.' },
+      type: 'album',
+      albumItems: [
+        {
+          label: '🍹 The Beach Bar',
+          text: 'We found this tiny shack with plastic chairs and the best cocktails. Stayed way too long, laughed way too much.',
+          photos: [
+            { icon: '🍹', caption: 'Beach Bar Vibes' },
+            { icon: '🌴', caption: 'Our Spot' },
+          ],
+        },
+        {
+          label: '🌅 The Sunset Walk',
+          text: 'Barefoot, quiet, with the waves doing most of the talking. This is where it all clicked.',
+          photos: [
+            { icon: '🌅', caption: 'That Sunset' },
+            { icon: '👣', caption: 'Footprints' },
+          ],
+        },
+        {
+          label: '📸 The Photo Moments',
+          text: 'Some moments we captured. Some we just lived. Both kinds matter.',
+          photos: [
+            { icon: '📸', caption: 'Caught on Camera' },
+            { icon: '🥥', caption: 'Coconut Water Break' },
+          ],
+        },
       ],
       badge: '🏖️ Goa Memory Unlocked',
       reflection: '"Goa wasn\'t just a trip. It was the rehearsal for the rest of it."',
@@ -720,9 +876,37 @@ function renderSideQuest(sq) {
     popinEl.classList.remove('sq-tropical');
   }
 
-  let html = `<div class="sq-tag">${sq.tag}</div>`;
+  // Show back button if current level has multiple side quests
+  const currentQuests = SIDE_QUESTS[state.currentLevel];
+  const hasMultiple = currentQuests && currentQuests.length > 1;
+
+  let html = '';
+  if (hasMultiple) {
+    html += `<button class="sq-back-btn" onclick="openSideQuestMenu()">‹ All Side Quests</button>`;
+  }
+  html += `<div class="sq-tag">${sq.tag}</div>`;
   html += `<div class="sq-title">${sq.icon} ${sq.title}</div>`;
   html += `<div class="sq-narrative">${sq.narrative}</div>`;
+
+  // Album type: mini photo album with browsable items
+  if (sq.type === 'album') {
+    html += `<div class="sq-album-grid" id="sq-album-${sq.id}">`;
+    sq.albumItems.forEach((item, i) => {
+      html += `<button class="sq-album-btn" onclick="openAlbumItem('${sq.id}', ${i})">
+        <span>${item.label}</span>
+        <span style="margin-left:auto;opacity:0.4">›</span>
+      </button>`;
+    });
+    html += `</div>`;
+    container.innerHTML = html;
+    // Mark as done on first view
+    if (!state.sideQuestsDone[sq.id]) {
+      state.sideQuestsDone[sq.id] = true;
+      addScore('sq_' + sq.id);
+      setTimeout(() => awardBadge('sq_' + sq.id), 600);
+    }
+    return;
+  }
 
   // Train animation for distance mode
   if (sq.hasTrainAnim) {
@@ -770,7 +954,10 @@ function handleSideQuestChoice(sqId, choiceIdx) {
 
   if (choice.correct) {
     outcomeEl.classList.add('correct');
-    state.sideQuestsDone[sqId] = true;
+    if (!state.sideQuestsDone[sqId]) {
+      state.sideQuestsDone[sqId] = true;
+      addScore('sq_' + sqId);
+    }
 
     // Show badge
     badgeArea.innerHTML = `<div class="sq-badge">${sq.badge}</div>`;
@@ -782,10 +969,35 @@ function handleSideQuestChoice(sqId, choiceIdx) {
     if (choicesContainer) choicesContainer.style.display = 'none';
 
     // Achievement
-    setTimeout(() => showAchievement('🗝️', 'Side Quest Complete', sq.title), 600);
+    setTimeout(() => awardBadge('sq_' + sqId), 600);
   } else {
     outcomeEl.classList.add('wrong');
   }
+}
+
+function openAlbumItem(sqId, itemIdx) {
+  let sq = null;
+  for (const level of Object.keys(SIDE_QUESTS)) {
+    const found = SIDE_QUESTS[level].find(s => s.id === sqId);
+    if (found) { sq = found; break; }
+  }
+  if (!sq || !sq.albumItems || !sq.albumItems[itemIdx]) return;
+
+  const item = sq.albumItems[itemIdx];
+  const container = $('#sq-content');
+
+  let html = `<button class="sq-back-btn" onclick="renderSideQuest(SIDE_QUESTS['${state.currentLevel}'].find(s=>s.id==='${sqId}'))">‹ Back to ${sq.title}</button>`;
+  html += `<div class="sq-tag">${sq.tag}</div>`;
+  html += `<div class="sq-title">${item.label}</div>`;
+  html += `<div class="sq-album-text">${item.text}</div>`;
+  html += `<div class="sq-album-photos">`;
+  item.photos.forEach(p => {
+    html += `<div class="sq-album-photo"><span class="sq-album-photo-icon">${p.icon}</span><span class="sq-album-photo-caption">${p.caption}</span></div>`;
+  });
+  html += `</div>`;
+  html += `<div class="sq-reflection">${sq.reflection}</div>`;
+
+  container.innerHTML = html;
 }
 
 function closeSideQuest() {
@@ -885,6 +1097,16 @@ document.addEventListener('click', (e) => {
   if (e.target === $('#side-quest-overlay')) closeSideQuest();
   if (e.target === $('#developer-note-popup')) closeDeveloperNote();
   if (e.target === $('#easter-egg-popup')) closeEasterEgg();
+});
+
+// Close popups on Esc key
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    if ($('#modal-overlay').classList.contains('visible'))        closeModal();
+    if ($('#side-quest-overlay').classList.contains('visible'))   closeSideQuest();
+    if ($('#developer-note-popup').classList.contains('visible')) closeDeveloperNote();
+    if ($('#easter-egg-popup').classList.contains('visible'))     closeEasterEgg();
+  }
 });
 
 /* ── Achievement Popup ───────────────────── */
@@ -1097,6 +1319,13 @@ function resetAndRestart() {
   state.sideQuestsDone = {};
   state.l2MapInit = false;
   state.l7MapInit = false;
+  // Reset scoring
+  state.score = 0;
+  state.earnedBadges = [];
+  state.bonusQuestsDone = {};
+  state.countriesVisited = [];
+  state.l5Scored = false;
+  state.l4Scored = false;
 
   // Destroy Leaflet map instances
   if (l2Map) { l2Map.remove(); l2Map = null; }
@@ -1147,6 +1376,7 @@ function resetAndRestart() {
   // Header / status bars
   const healthFill = $('#health-fill-bar'); if (healthFill) healthFill.style.width = '40%';
   const distanceFill = $('#distance-fill-bar'); if (distanceFill) distanceFill.style.width = '0%';
+  const coopFillBar = $('#coop-fill-bar'); if (coopFillBar) coopFillBar.style.width = '0%';
   const progressFill = $('#progress-fill'); if (progressFill) progressFill.style.width = '0%';
   const progressPct = $('#progress-pct'); if (progressPct) progressPct.textContent = '0%';
 

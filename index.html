@@ -35,8 +35,8 @@
       <span class="distance-bar"><span class="distance-fill" id="distance-fill-bar" style="width:0%"></span></span>
     </div>
     <div class="status-pill" id="status-coop" title="Co-Op Mode">
-      <span class="icon">🏠</span><span>Co-Op Active</span>
-      <span class="pulse-dot" style="margin-left:4px"></span>
+      <span class="icon">🏠</span><span>Co-Op</span>
+      <span class="coop-bar"><span class="coop-fill" id="coop-fill-bar" style="width:0%"></span></span>
     </div>
     <span class="level-badge" id="level-badge">Level 1</span>
   </div>
@@ -144,7 +144,7 @@
       </div>
       <div class="choices-label">What do you do?</div>
       <div class="choices-grid">
-        <button class="choice-btn" onclick="makeChoice1('ignore')"><span class="choice-icon">🙄</span><span class="choice-text">Ignore him</span><span class="choice-arrow">›</span></button>
+        <button class="choice-btn" onclick="makeChoice1('ignore')"><span class="choice-icon">🙄</span><span class="choice-text">Ignore</span><span class="choice-arrow">›</span></button>
         <button class="choice-btn" onclick="makeChoice1('polite')"><span class="choice-icon">🤝</span><span class="choice-text">Be polite</span><span class="choice-arrow">›</span></button>
         <button class="choice-btn" onclick="makeChoice1('talk')"><span class="choice-icon">💬</span><span class="choice-text">Actually talk</span><span class="choice-arrow">›</span></button>
       </div>
@@ -227,10 +227,10 @@
         <div class="level-date">March 2023</div>
       </div>
       <div class="narrative-card">
-        I flew thousands of kilometers for one question.<br>
+        You flew thousands of kilometers for one question.<br>
         <strong>The kind that changes everything.</strong>
       </div>
-      <div class="choices-label">Your move:</div>
+      <div class="choices-label">My move:</div>
       <div class="choices-grid">
         <button class="choice-btn" onclick="makeChoice3('panic')"><span class="choice-icon">😱</span><span class="choice-text">Panic</span><span class="choice-arrow">›</span></button>
         <button class="choice-btn" onclick="makeChoice3('think')"><span class="choice-icon">🤔</span><span class="choice-text">Keep Thinking</span><span class="choice-arrow">›</span></button>
@@ -348,7 +348,7 @@
         <h2 class="level-title">Europe<br>Expansion Pack</h2>
       </div>
       <div class="narrative-card">
-        Two people. One continent.<br>Many trains, a few wrong turns, and<br><strong>entirely too many good memories.</strong>
+        Two people. One continent.<br>Many trains and planes, a few Souveniers, and<br><strong>entirely too many good memories.</strong>
       </div>
 
       <div class="europe-map-container">
@@ -392,25 +392,35 @@
         <h2 class="level-title">Game Status:<br>Ongoing</h2>
       </div>
       <div class="narrative-card">3.5 years since we pressed Start.<br>Still playing.<br><strong>Still choosing each other.</strong></div>
+
+      <!-- Dynamic Score Summary -->
+      <div class="score-summary" id="final-score-summary">
+        <div class="score-total-card">
+          <div class="score-total-label">Total Score</div>
+          <div class="score-total-value" id="final-total-score">0 / 0</div>
+          <div class="score-total-bar"><div class="score-total-fill" id="final-total-fill"></div></div>
+        </div>
+        <div class="score-breakdown" id="final-score-breakdown">
+          <!-- Dynamically populated -->
+        </div>
+      </div>
+
       <div class="final-stats">
         <div class="stat-card"><div class="sc-value">3.5</div><div class="sc-label">Years Playing</div></div>
         <div class="stat-card"><div class="sc-value">8</div><div class="sc-label">Levels Cleared</div></div>
-        <div class="stat-card"><div class="sc-value">5+</div><div class="sc-label">Countries Visited</div></div>
+        <div class="stat-card"><div class="sc-value" id="final-countries-count">0</div><div class="sc-label">Countries Visited</div></div>
         <div class="stat-card"><div class="sc-value">∞</div><div class="sc-label">Memories Made</div></div>
       </div>
       <div class="final-progress-row">
         <div class="final-progress-track"><div class="final-progress-fill" id="final-progress-fill"></div></div>
-        <div class="final-progress-label">Relationship Progress: 100% (for now)</div>
+        <div class="final-progress-label" id="final-progress-label">Relationship Progress: 100%</div>
       </div>
+
+      <!-- Dynamic Badges -->
       <div class="memory-section visible" style="margin-top:16px">
-        <div class="memory-title">💛 Total Achievements</div>
-        <div class="memory-items">
-          <div class="memory-item">Survived Time Zones</div>
-          <div class="memory-item">Boss Battle Cleared</div>
-          <div class="memory-item">Patience +100</div>
-          <div class="memory-item">Living Together IRL</div>
-          <div class="memory-item">International Legends</div>
-          <div class="memory-item">Domestic Legends</div>
+        <div class="memory-title">📛 Badges &amp; Achievements <span id="final-badge-count" style="font-size:0.8rem;color:var(--text-muted)"></span></div>
+        <div class="badge-grid" id="final-badges-list">
+          <!-- Dynamically populated -->
         </div>
       </div>
 

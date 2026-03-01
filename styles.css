@@ -734,6 +734,13 @@ body {
   font-family: var(--font-head); font-size: 1.2rem; font-weight: 700;
   color: var(--text); margin-bottom: 6px;
 }
+.sq-back-btn {
+  background: none; border: none; font-family: var(--font-body);
+  font-size: 0.82rem; font-weight: 600; color: var(--gold);
+  cursor: pointer; padding: 4px 0; margin-bottom: 12px;
+  transition: var(--transition); display: inline-flex; align-items: center; gap: 4px;
+}
+.sq-back-btn:hover { color: var(--rose-deep); }
 .sq-tag {
   font-size: 0.65rem; font-weight: 700; letter-spacing: 0.12em;
   text-transform: uppercase; color: var(--gold); margin-bottom: 14px;
@@ -792,6 +799,42 @@ body {
 }
 .sq-menu-item:hover {
   border-color: var(--rose); background: var(--rose-light); transform: translateX(3px);
+}
+
+/* Album mini-gallery styles */
+.sq-album-grid {
+  display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px;
+}
+.sq-album-btn {
+  background: var(--white); border: 2px solid var(--border);
+  border-radius: var(--radius-sm); padding: 14px 18px;
+  font-family: var(--font-body); font-size: 0.9rem; font-weight: 600;
+  color: var(--text); cursor: pointer; text-align: left;
+  transition: var(--transition); display: flex; align-items: center; gap: 10px;
+}
+.sq-album-btn:hover {
+  border-color: var(--rose); background: var(--rose-light); transform: translateX(3px);
+}
+.sq-album-text {
+  font-family: var(--font-body); font-size: 0.92rem; color: var(--text);
+  line-height: 1.7; margin-bottom: 18px; padding: 14px 18px;
+  background: rgba(255,255,255,0.7); border-radius: var(--radius-sm);
+  border-left: 3px solid var(--gold);
+}
+.sq-album-photos {
+  display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 16px;
+}
+.sq-album-photo {
+  background: var(--white); border: 2px solid var(--border);
+  border-radius: var(--radius-sm); padding: 24px 12px;
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+  transition: var(--transition);
+}
+.sq-album-photo:hover { border-color: var(--rose); transform: translateY(-2px); }
+.sq-album-photo-icon { font-size: 2.2rem; }
+.sq-album-photo-caption {
+  font-family: var(--font-body); font-size: 0.75rem; font-weight: 600;
+  color: var(--text-muted); text-align: center;
 }
 
 /* Goa tropical theme */
@@ -902,6 +945,111 @@ body {
 ::-webkit-scrollbar-thumb { background: var(--rose); border-radius: 99px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--rose-deep); }
 
+/* ── Co-Op Fill Bar (header pill) ───────── */
+.coop-bar {
+  display: inline-block; width: 48px; height: 5px;
+  background: var(--rose-light); border-radius: 99px; overflow: hidden;
+  vertical-align: middle; margin-left: 2px;
+}
+.coop-fill {
+  height: 100%; background: linear-gradient(90deg, #A8C87A, #6DA832);
+  border-radius: 99px; transition: width 0.7s ease; width: 0%;
+}
+
+/* ── Final Screen – Score Summary ──────── */
+.score-summary {
+  margin: 28px 0; text-align: center;
+}
+.score-total-card {
+  background: linear-gradient(135deg, var(--gold-light), var(--rose-light));
+  border: 2px solid var(--gold); border-radius: var(--radius);
+  padding: 24px 20px 18px; margin-bottom: 20px;
+}
+.score-total-label {
+  font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em;
+  text-transform: uppercase; color: var(--gold); margin-bottom: 4px;
+}
+.score-total-value {
+  font-family: var(--font-head); font-size: 2.2rem; font-weight: 700;
+  color: var(--rose-deep); line-height: 1.2; margin-bottom: 10px;
+}
+.score-total-bar {
+  height: 10px; background: rgba(255,255,255,0.6); border-radius: 99px;
+  overflow: hidden;
+}
+.score-total-fill {
+  height: 100%; border-radius: 99px;
+  background: linear-gradient(90deg, var(--rose-deep), var(--gold));
+  transition: width 1.2s cubic-bezier(0.4, 0, 0.2, 1); width: 0%;
+}
+
+.score-breakdown {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 12px;
+}
+.score-card {
+  background: var(--white); border: 1px solid var(--border);
+  border-radius: var(--radius-sm); padding: 14px 12px; text-align: center;
+  transition: var(--transition); position: relative;
+}
+.score-card.complete {
+  border-color: var(--gold); background: linear-gradient(135deg, #fffdf5, var(--gold-light));
+}
+.score-card-label {
+  font-size: 0.72rem; font-weight: 700; color: var(--text-muted);
+  text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 4px;
+}
+.score-card-value {
+  font-family: var(--font-head); font-size: 1.3rem; font-weight: 700;
+  color: var(--rose-deep); margin-bottom: 8px;
+}
+.score-card-bar {
+  height: 5px; background: var(--rose-light); border-radius: 99px;
+  overflow: hidden; margin-bottom: 6px;
+}
+.score-card-fill {
+  height: 100%; border-radius: 99px;
+  background: linear-gradient(90deg, var(--rose-deep), var(--gold));
+  transition: width 0.8s ease;
+}
+.score-card-check {
+  font-size: 0.8rem; margin-top: 2px;
+}
+.score-card-hint {
+  font-size: 0.65rem; color: var(--text-muted); font-style: italic;
+}
+
+/* ── Final Screen – Badge Grid ─────────── */
+.badge-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 10px; margin-top: 12px;
+}
+.badge-item {
+  display: flex; flex-direction: column; align-items: center;
+  gap: 4px; padding: 14px 10px; border-radius: var(--radius-sm);
+  border: 1px solid var(--border); background: var(--white);
+  transition: var(--transition); text-align: center;
+}
+.badge-item.unlocked {
+  background: linear-gradient(135deg, #fffdf5, var(--gold-light));
+  border-color: var(--gold);
+}
+.badge-item.locked {
+  opacity: 0.55; filter: grayscale(0.3);
+}
+.badge-item-icon {
+  font-size: 1.6rem; line-height: 1;
+}
+.badge-item-name {
+  font-size: 0.75rem; font-weight: 700; color: var(--text);
+  line-height: 1.2;
+}
+.badge-item.locked .badge-item-name { color: var(--text-muted); }
+.badge-item-desc {
+  font-size: 0.65rem; color: var(--text-muted); font-style: italic;
+  line-height: 1.3;
+}
+
 /* ── Mobile ────────────────────────────── */
 @media (max-width: 600px) {
   .screen { padding: 80px 16px 50px; }
@@ -917,6 +1065,9 @@ body {
   .side-quest-popin { padding: 24px 18px; }
   .back-btn { position: relative; margin-bottom: 8px; left: auto; top: auto; }
   .map-pin .pin-label { font-size: 0.55rem; }
+  .score-breakdown { grid-template-columns: repeat(2, 1fr); }
+  .badge-grid { grid-template-columns: repeat(2, 1fr); }
+  .score-total-value { font-size: 1.6rem; }
 }
 
 /* ── Leaflet Map Overrides ─────────────── */
