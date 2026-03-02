@@ -19,19 +19,28 @@ const state = {
   sideQuestsDone: {},
   l2MapInit: false,
   l7MapInit: false,
-  // Scoring system
+  // Scoring system — tracked per category
+  points: { curiosity: 0, courage: 0, chemistry: 0, intentionality: 0, commitment: 0 },
   score: 0,
   earnedBadges: [],
   bonusQuestsDone: {},
   countriesVisited: [],
   l5Scored: false,
   l4Scored: false,
+  // Level 1 stage completion tracking
+  l1s1Done: false,
+  l1s2Done: false,
+  l1s3Done: false,
+  l1s4Done: false,
 };
 
 /* ── Level Config ────────────────────────── */
 const LEVELS = {
-  landing:  { progress: 0,   healthBoost: 0,  label: '' },
-  level1:   { progress: 10,  healthBoost: 10, label: 'Level 1' },
+  landing:       { progress: 0,   healthBoost: 0,  label: '' },
+  'level1-s1':   { progress: 3,   healthBoost: 3,  label: 'Level 1' },
+  'level1-s2':   { progress: 5,   healthBoost: 3,  label: 'Level 1' },
+  'level1-s3':   { progress: 7,   healthBoost: 2,  label: 'Level 1' },
+  'level1-s4':   { progress: 10,  healthBoost: 2,  label: 'Level 1' },
   level2:   { progress: 25,  healthBoost: 8,  label: 'Level 2' },
   level3:   { progress: 45,  healthBoost: 15, label: 'Level 3' },
   level4:   { progress: 55,  healthBoost: 12, label: 'Level 4' },
@@ -44,7 +53,10 @@ const LEVELS = {
 
 /* ── Back Navigation Map ─────────────────── */
 const PREV_LEVEL = {
-  level2: 'level1',
+  'level1-s2': 'level1-s1',
+  'level1-s3': 'level1-s2',
+  'level1-s4': 'level1-s3',
+  level2: 'level1-s4',
   level3: 'level2',
   level4: 'level3',
   level5: 'level4',
@@ -56,7 +68,11 @@ const PREV_LEVEL = {
 
 /* ── Score Config ────────────────────────── */
 const SCORE_CONFIG = {
-  level1:       { points: 10,  label: 'Level 1 – Meet Cute' },
+  l1_s1:        { points: 5,   label: 'L1 Stage 1 – The Almost Interaction', category: 'curiosity' },
+  l1_s2_courage:{ points: 10,  label: 'L1 Stage 2 – Courage', category: 'courage' },
+  l1_s2_chem:   { points: 10,  label: 'L1 Stage 2 – Chemistry', category: 'chemistry' },
+  l1_s3:        { points: 15,  label: 'L1 Stage 3 – Café Meeting', category: 'intentionality' },
+  l1_s4:        { points: 50,  label: 'L1 Stage 4 – Airport Decision', category: 'commitment' },
   level2:       { points: 15,  label: 'Level 2 – Long Distance' },
   level3:       { points: 50,  label: 'Level 3 – Proposal' },
   level4:       { points: 20,  label: 'Level 4 – Parents' },
@@ -85,6 +101,8 @@ const MAX_SCORE = Object.values(SCORE_CONFIG).reduce((sum, c) => sum + c.points,
 
 /* ── All Possible Badges ────────────────── */
 const ALL_BADGES = [
+  { id: 'first_move',    icon: '💌', name: 'First Move Made',        desc: 'Someone had the courage to say hi.' },
+  { id: 'ldr_activated', icon: '✈️', name: 'Long Distance Mode Activated', desc: 'Relationship official before departure.' },
   { id: 'time_zones',    icon: '🌍', name: 'Survived Time Zones',    desc: 'Long distance? No problem.' },
   { id: 'boss_battle',   icon: '💍', name: 'Boss Battle Cleared',    desc: '+50 Commitment Points' },
   { id: 'patience',      icon: '🏅', name: 'Patience +100',          desc: 'Both families on board.' },
@@ -113,6 +131,10 @@ function addScore(key) {
   const cfg = SCORE_CONFIG[key];
   if (!cfg) return;
   state.score += cfg.points;
+  // Track per-category if defined
+  if (cfg.category && state.points.hasOwnProperty(cfg.category)) {
+    state.points[cfg.category] += cfg.points;
+  }
 }
 
 function awardBadge(id) {
@@ -180,8 +202,8 @@ function updateStatusBar(levelId) {
   const distancePill = $('#status-distance');
   const coopPill     = $('#status-coop');
 
-  if (levelId === 'level1') {
-    // Level 1: no distance, no co-op
+  if (levelId === 'level1' || levelId.startsWith('level1-')) {
+    // Level 1 (all stages): no distance, no co-op
     distancePill.classList.remove('active');
     distancePill.classList.add('hidden');
     coopPill.classList.remove('active');
@@ -233,45 +255,191 @@ function goBack() {
 
 /* ── Landing ─────────────────────────────── */
 function pressStart() {
-  showScreen('level1');
+  showScreen('level1-s1');
 }
 
-/* ── Level 1 – Meet Cute ─────────────────── */
-function makeChoice1(choice) {
-  const wrongBox    = $('#l1-wrong');
-  const correctBox  = $('#l1-correct');
-  const memory      = $('#l1-memory');
-  const pointsPop   = $('#l1-points');
-  const continueBtn = $('#l1-continue');
-  const gallery     = $('#l1-gallery');
+/* ── Level 1 – Stage 1: The Almost Interaction ──── */
+function makeChoiceL1S1(choice) {
+  const wrongBox    = $('#l1s1-wrong');
+  const correctBox  = $('#l1s1-correct');
+  const pointsPop   = $('#l1s1-points');
+  const continueBtn = $('#l1s1-continue');
+  const gallery     = $('#l1s1-gallery');
 
   wrongBox.style.display   = 'none';
   correctBox.style.display = 'none';
 
-  if (choice === 'ignore' || choice === 'polite') {
+  if (choice === 'say_hi' || choice === 'pretend') {
     wrongBox.style.display = 'block';
-    wrongBox.querySelector('p').textContent = '⚠️ Alternate universe unlocked: We remain strangers.';
+    const msg = choice === 'say_hi'
+      ? '⚠️ Too early. The timing wasn\u2019t right.'
+      : '⚠️ Nice try. But you definitely looked.';
+    wrongBox.querySelector('p').textContent = msg;
     continueBtn.classList.add('hidden');
-    memory.classList.remove('visible');
     pointsPop.classList.remove('visible');
-    if (gallery) gallery.classList.remove('visible');
+    gallery.style.display = 'none';
     state.relationshipHealth = Math.max(0, state.relationshipHealth - 5);
     updateHealthBar();
-  } else if (choice === 'talk') {
+  } else if (choice === 'notice') {
+    correctBox.style.display = 'block';
+    state.relationshipHealth = Math.min(100, state.relationshipHealth + 5);
+    updateHealthBar();
+    pointsPop.classList.add('visible');
+    gallery.style.display = 'grid';
+    continueBtn.classList.remove('hidden');
+    if (!state.l1s1Done) {
+      state.l1s1Done = true;
+      addScore('l1_s1');
+    }
+  }
+}
+
+function retryL1S1() {
+  $('#l1s1-wrong').style.display = 'none';
+}
+
+/* ── Level 1 – Stage 2: The Instagram Hi ──────── */
+function handleOpenMessage() {
+  const mockup     = $('#ig-mockup');
+  const msg1       = $('#ig-msg1');
+  const msg2       = $('#ig-msg2');
+  const pointsPop  = $('#l1s2-points');
+  const continueBtn= $('#l1s2-continue');
+  const gallery    = $('#l1s2-gallery');
+  const openBtn    = $('#l1s2-open-btn');
+
+  // Disable the button
+  openBtn.disabled = true;
+  openBtn.textContent = 'Opening...';
+
+  // Remove blur
+  mockup.classList.add('revealed');
+
+  // Show first message after 0.8s
+  setTimeout(() => {
+    msg1.classList.add('visible');
+  }, 800);
+
+  // Show second message after 2s
+  setTimeout(() => {
+    msg2.classList.add('visible');
+  }, 2000);
+
+  // Show points, gallery, continue after 3s
+  setTimeout(() => {
+    pointsPop.classList.add('visible');
+    gallery.style.display = 'grid';
+    continueBtn.classList.remove('hidden');
+    $('#l1s2-open-row').style.display = 'none';
+
+    if (!state.l1s2Done) {
+      state.l1s2Done = true;
+      addScore('l1_s2_courage');
+      addScore('l1_s2_chem');
+    }
+
+    // Achievement: First Move Made
+    setTimeout(() => awardBadge('first_move'), 600);
+  }, 3000);
+}
+
+/* ── Level 1 – Stage 3: The Café Meeting ──────── */
+function makeChoiceL1S3(choice) {
+  const wrongBox    = $('#l1s3-wrong');
+  const correctBox  = $('#l1s3-correct');
+  const pointsPop   = $('#l1s3-points');
+  const continueBtn = $('#l1s3-continue');
+  const memory      = $('#l1s3-memory');
+
+  wrongBox.style.display   = 'none';
+  correctBox.style.display = 'none';
+
+  if (choice === 'scared') {
+    wrongBox.style.display = 'block';
+    wrongBox.querySelector('p').textContent = '⚠️ You are missing out on something real.';
+    continueBtn.classList.add('hidden');
+    pointsPop.classList.remove('visible');
+    memory.classList.remove('visible');
+    state.relationshipHealth = Math.max(0, state.relationshipHealth - 5);
+    updateHealthBar();
+  } else if (choice === 'pretend') {
+    wrongBox.style.display = 'block';
+    wrongBox.querySelector('p').textContent = '⚠️ It could be... Try again.';
+    continueBtn.classList.add('hidden');
+    pointsPop.classList.remove('visible');
+    memory.classList.remove('visible');
+    state.relationshipHealth = Math.max(0, state.relationshipHealth - 5);
+    updateHealthBar();
+  } else if (choice === 'show_up') {
     correctBox.style.display = 'block';
     state.relationshipHealth = Math.min(100, state.relationshipHealth + 10);
     updateHealthBar();
     pointsPop.classList.add('visible');
     memory.classList.add('visible');
     continueBtn.classList.remove('hidden');
-    state.level1Done = true;
-    if (gallery) gallery.classList.add('visible');
-    addScore('level1');
+    if (!state.l1s3Done) {
+      state.l1s3Done = true;
+      addScore('l1_s3');
+    }
   }
 }
 
-function retryLevel1() {
-  $('#l1-wrong').style.display = 'none';
+function retryL1S3() {
+  $('#l1s3-wrong').style.display = 'none';
+}
+
+/* ── Level 1 – Stage 4: The Airport Call ──────── */
+function makeChoiceL1S4(choice) {
+  const wrongBox    = $('#l1s4-wrong');
+  const choices     = $('#l1s4-choices');
+  const reveal1     = $('#l1s4-reveal1');
+
+  wrongBox.style.display = 'none';
+
+  if (choice === 'avoid' || choice === 'wait') {
+    wrongBox.style.display = 'block';
+    const msg = choice === 'avoid'
+      ? '⚠️ Some conversations can\u2019t wait for a landing.'
+      : '⚠️ Wait for what? The next flight? Ask her now.';
+    wrongBox.querySelector('p').textContent = msg;
+    state.relationshipHealth = Math.max(0, state.relationshipHealth - 5);
+    updateHealthBar();
+  } else if (choice === 'ask_gf') {
+    choices.style.display = 'none';
+    reveal1.classList.add('visible');
+  }
+}
+
+function revealL1S4Final() {
+  const reveal2     = $('#l1s4-reveal2');
+  const pointsPop   = $('#l1s4-points');
+  const statusBanner= $('#l1s4-status');
+  const memory      = $('#l1s4-memory');
+  const continueBtn = $('#l1s4-continue');
+
+  reveal2.classList.add('visible');
+  state.relationshipHealth = Math.min(100, state.relationshipHealth + 20);
+  updateHealthBar();
+
+  setTimeout(() => {
+    pointsPop.classList.add('visible');
+    statusBanner.classList.add('visible');
+    memory.classList.add('visible');
+    continueBtn.classList.remove('hidden');
+    state.level1Done = true;
+
+    if (!state.l1s4Done) {
+      state.l1s4Done = true;
+      addScore('l1_s4');
+    }
+
+    // Achievement: Long Distance Mode Activated
+    setTimeout(() => awardBadge('ldr_activated'), 800);
+  }, 600);
+}
+
+function retryL1S4() {
+  $('#l1s4-wrong').style.display = 'none';
 }
 
 /* ── Level 2 – Germany Mode ──────────────── */
@@ -1320,25 +1488,57 @@ function resetAndRestart() {
   state.l2MapInit = false;
   state.l7MapInit = false;
   // Reset scoring
+  state.points = { curiosity: 0, courage: 0, chemistry: 0, intentionality: 0, commitment: 0 };
   state.score = 0;
   state.earnedBadges = [];
   state.bonusQuestsDone = {};
   state.countriesVisited = [];
   state.l5Scored = false;
   state.l4Scored = false;
+  // Reset Level 1 stage tracking
+  state.l1s1Done = false;
+  state.l1s2Done = false;
+  state.l1s3Done = false;
+  state.l1s4Done = false;
 
   // Destroy Leaflet map instances
   if (l2Map) { l2Map.remove(); l2Map = null; }
   if (l7Map) { l7Map.remove(); l7Map = null; }
 
   // Reset UI elements across all levels
-  // Level 1
-  const l1Wrong = $('#l1-wrong'); if (l1Wrong) l1Wrong.style.display = 'none';
-  const l1Correct = $('#l1-correct'); if (l1Correct) l1Correct.style.display = 'none';
-  const l1Memory = $('#l1-memory'); if (l1Memory) l1Memory.classList.remove('visible');
-  const l1Points = $('#l1-points'); if (l1Points) l1Points.classList.remove('visible');
-  const l1Continue = $('#l1-continue'); if (l1Continue) l1Continue.classList.add('hidden');
-  const l1Gallery = $('#l1-gallery'); if (l1Gallery) l1Gallery.classList.remove('visible');
+  // Level 1 – Stage 1
+  const l1s1Wrong = $('#l1s1-wrong'); if (l1s1Wrong) l1s1Wrong.style.display = 'none';
+  const l1s1Correct = $('#l1s1-correct'); if (l1s1Correct) l1s1Correct.style.display = 'none';
+  const l1s1Points = $('#l1s1-points'); if (l1s1Points) l1s1Points.classList.remove('visible');
+  const l1s1Continue = $('#l1s1-continue'); if (l1s1Continue) l1s1Continue.classList.add('hidden');
+  const l1s1Gallery = $('#l1s1-gallery'); if (l1s1Gallery) l1s1Gallery.style.display = 'none';
+
+  // Level 1 – Stage 2
+  const igMockup = $('#ig-mockup'); if (igMockup) igMockup.classList.remove('revealed');
+  const igMsg1 = $('#ig-msg1'); if (igMsg1) igMsg1.classList.remove('visible');
+  const igMsg2 = $('#ig-msg2'); if (igMsg2) igMsg2.classList.remove('visible');
+  const l1s2Points = $('#l1s2-points'); if (l1s2Points) l1s2Points.classList.remove('visible');
+  const l1s2Continue = $('#l1s2-continue'); if (l1s2Continue) l1s2Continue.classList.add('hidden');
+  const l1s2Gallery = $('#l1s2-gallery'); if (l1s2Gallery) l1s2Gallery.style.display = 'none';
+  const l1s2OpenRow = $('#l1s2-open-row'); if (l1s2OpenRow) l1s2OpenRow.style.display = '';
+  const l1s2OpenBtn = $('#l1s2-open-btn'); if (l1s2OpenBtn) { l1s2OpenBtn.disabled = false; l1s2OpenBtn.textContent = '📩 Open Message'; }
+
+  // Level 1 – Stage 3
+  const l1s3Wrong = $('#l1s3-wrong'); if (l1s3Wrong) l1s3Wrong.style.display = 'none';
+  const l1s3Correct = $('#l1s3-correct'); if (l1s3Correct) l1s3Correct.style.display = 'none';
+  const l1s3Points = $('#l1s3-points'); if (l1s3Points) l1s3Points.classList.remove('visible');
+  const l1s3Continue = $('#l1s3-continue'); if (l1s3Continue) l1s3Continue.classList.add('hidden');
+  const l1s3Memory = $('#l1s3-memory'); if (l1s3Memory) l1s3Memory.classList.remove('visible');
+
+  // Level 1 – Stage 4
+  const l1s4Wrong = $('#l1s4-wrong'); if (l1s4Wrong) l1s4Wrong.style.display = 'none';
+  const l1s4Choices = $('#l1s4-choices'); if (l1s4Choices) l1s4Choices.style.display = '';
+  const l1s4Reveal1 = $('#l1s4-reveal1'); if (l1s4Reveal1) l1s4Reveal1.classList.remove('visible');
+  const l1s4Reveal2 = $('#l1s4-reveal2'); if (l1s4Reveal2) l1s4Reveal2.classList.remove('visible');
+  const l1s4Points = $('#l1s4-points'); if (l1s4Points) l1s4Points.classList.remove('visible');
+  const l1s4Status = $('#l1s4-status'); if (l1s4Status) l1s4Status.classList.remove('visible');
+  const l1s4Memory = $('#l1s4-memory'); if (l1s4Memory) l1s4Memory.classList.remove('visible');
+  const l1s4Continue = $('#l1s4-continue'); if (l1s4Continue) l1s4Continue.classList.add('hidden');
 
   // Level 2
   const l2Wrong = $('#l2-wrong'); if (l2Wrong) l2Wrong.style.display = 'none';

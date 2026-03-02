@@ -878,6 +878,211 @@ body {
 }
 .photo-blurred.revealed { filter: blur(0px); }
 
+/* ── Level 1 Stage-Specific Styles ─────── */
+
+/* Stage sub-header */
+.stage-header {
+  text-align: center; margin-bottom: 24px; padding-top: 8px;
+}
+.stage-header .stage-tag {
+  display: inline-block; font-size: 0.65rem; font-weight: 700;
+  letter-spacing: 0.12em; text-transform: uppercase; color: var(--rose-deep);
+  background: var(--rose-light); border: 1px solid var(--border);
+  border-radius: 99px; padding: 3px 12px; margin-bottom: 10px;
+}
+.stage-header .stage-title {
+  font-family: var(--font-head); font-size: clamp(20px, 4vw, 30px);
+  font-weight: 700; line-height: 1.3; color: var(--text); margin-bottom: 6px;
+}
+.stage-header .stage-date {
+  font-size: 0.78rem; color: var(--text-muted); font-weight: 500;
+}
+.stage-divider {
+  width: 60px; height: 2px;
+  background: linear-gradient(90deg, transparent, var(--rose), transparent);
+  margin: 16px auto 24px;
+}
+
+/* Styled photo placeholder cards */
+.photo-card {
+  background: linear-gradient(135deg, var(--rose-light) 0%, #FFF8F0 100%);
+  border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 24px 16px; text-align: center;
+  box-shadow: 0 2px 12px var(--shadow); transition: var(--transition);
+  display: flex; flex-direction: column; align-items: center; gap: 10px;
+}
+.photo-card:hover { transform: translateY(-2px); box-shadow: 0 6px 24px var(--shadow); }
+.photo-card .photo-card-icon { font-size: 2.4rem; }
+.photo-card .photo-card-caption {
+  font-family: var(--font-head); font-size: 0.85rem; font-style: italic;
+  color: var(--text-muted); line-height: 1.5;
+}
+.photo-cards-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 16px; margin-bottom: 24px;
+}
+
+/* Instagram DM Mockup */
+.ig-mockup {
+  background: var(--white); border: 1px solid #DBDBDB;
+  border-radius: var(--radius); overflow: hidden; margin-bottom: 24px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08); max-width: 400px;
+  margin-left: auto; margin-right: auto;
+  filter: blur(8px); transition: filter 0.8s ease;
+}
+.ig-mockup.revealed { filter: blur(0px); }
+.ig-mockup-header {
+  display: flex; align-items: center; gap: 10px;
+  padding: 12px 16px; border-bottom: 1px solid #EFEFEF;
+  background: linear-gradient(135deg, #833AB4 0%, #C13584 50%, #E1306C 100%);
+}
+.ig-avatar {
+  width: 32px; height: 32px; border-radius: 50%;
+  background: rgba(255,255,255,0.3); display: flex; align-items: center;
+  justify-content: center; font-size: 0.9rem;
+}
+.ig-username {
+  font-size: 0.85rem; font-weight: 700; color: var(--white);
+  letter-spacing: 0.02em;
+}
+.ig-brand {
+  margin-left: auto; font-size: 0.7rem; color: rgba(255,255,255,0.7);
+  font-weight: 600; letter-spacing: 0.05em;
+}
+.ig-messages {
+  padding: 20px 16px; min-height: 120px;
+  display: flex; flex-direction: column; gap: 12px;
+  background: #FAFAFA;
+}
+.ig-bubble {
+  background: #EFEFEF; border-radius: 18px 18px 18px 4px;
+  padding: 10px 16px; max-width: 80%; font-size: 0.92rem;
+  color: var(--text); font-weight: 500; display: none;
+  animation: fadeIn 0.4s ease both;
+}
+.ig-bubble.sent {
+  background: #3797F0; color: white;
+  border-radius: 18px 18px 4px 18px;
+  align-self: flex-end;
+}
+.ig-bubble.visible { display: block; }
+.ig-timestamp {
+  font-size: 0.65rem; color: #8E8E8E; text-align: center;
+  margin-top: 4px;
+}
+
+/* Airport Theme (Stage 4) */
+.airport-theme {
+  background: linear-gradient(160deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%) !important;
+  color: var(--white) !important;
+}
+.airport-theme .level-header .level-tag,
+.airport-theme .stage-header .stage-tag {
+  background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.2);
+  color: var(--gold);
+}
+.airport-theme .level-title,
+.airport-theme .stage-header .stage-title { color: var(--white); }
+.airport-theme .level-date,
+.airport-theme .stage-header .stage-date { color: rgba(255,255,255,0.6); }
+.airport-theme .narrative-card {
+  background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.15);
+  color: rgba(255,255,255,0.9); box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+}
+.airport-theme .narrative-card::before { color: var(--gold); opacity: 0.3; }
+.airport-theme .choices-label { color: rgba(255,255,255,0.5); }
+.airport-theme .choice-btn {
+  background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.15);
+  color: var(--white);
+}
+.airport-theme .choice-btn:hover {
+  background: rgba(255,255,255,0.12); border-color: var(--gold);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+}
+.airport-theme .outcome-box.wrong {
+  background: rgba(232,180,160,0.15); border-color: rgba(232,180,160,0.3);
+}
+.airport-theme .outcome-box.wrong p { color: rgba(255,255,255,0.9); }
+.airport-theme .outcome-box.correct {
+  background: rgba(168,200,122,0.15); border-color: rgba(168,200,122,0.3);
+}
+.airport-theme .outcome-box.correct p { color: rgba(255,255,255,0.9); }
+.airport-theme .back-btn {
+  background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.2);
+  color: var(--gold);
+}
+.airport-theme .back-btn:hover {
+  background: rgba(255,255,255,0.2); border-color: var(--gold);
+}
+.airport-flight-path {
+  text-align: center; margin: 16px 0 24px; font-size: 1.2rem;
+  letter-spacing: 16px; color: rgba(255,255,255,0.3);
+  animation: flightDots 2s ease-in-out infinite;
+}
+@keyframes flightDots {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.7; }
+}
+.airport-departure-board {
+  background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1);
+  border-radius: var(--radius-sm); padding: 12px 20px; margin-bottom: 20px;
+  font-family: 'Courier New', monospace; font-size: 0.82rem;
+  color: var(--gold); text-align: center; letter-spacing: 0.1em;
+}
+
+/* Café Theme accent (Stage 3) */
+.cafe-narrative {
+  background: linear-gradient(135deg, #F5E6D3 0%, #FFF8F0 100%) !important;
+  border-color: #D4B896 !important;
+}
+.cafe-narrative::before { color: #8B6F47 !important; }
+
+/* Status Update Banner */
+.status-update-banner {
+  background: linear-gradient(135deg, var(--rose-deep) 0%, var(--gold) 100%);
+  border-radius: var(--radius); padding: 18px 24px;
+  text-align: center; margin-bottom: 20px; color: var(--white);
+  font-family: var(--font-head); font-size: 1.1rem; font-weight: 700;
+  display: none; animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
+  box-shadow: 0 4px 24px var(--shadow);
+}
+.status-update-banner.visible { display: block; }
+
+/* Two-step reveal text */
+.reveal-step {
+  display: none; animation: fadeIn 0.6s ease both;
+  text-align: center; margin-bottom: 16px;
+}
+.reveal-step.visible { display: block; }
+.reveal-step p {
+  font-family: var(--font-head); font-size: 1.05rem; font-style: italic;
+  color: var(--text); line-height: 1.8;
+}
+.reveal-step .reveal-link {
+  color: var(--rose-deep); cursor: pointer; text-decoration: underline;
+  text-underline-offset: 3px; font-weight: 600;
+}
+.reveal-step .reveal-link:hover { color: var(--gold); }
+
+/* Airport theme specific reveal */
+.airport-theme .reveal-step p { color: rgba(255,255,255,0.9); }
+.airport-theme .reveal-step .reveal-link { color: var(--gold); }
+.airport-theme .reveal-step .reveal-link:hover { color: var(--white); }
+.airport-theme .status-update-banner {
+  background: linear-gradient(135deg, var(--gold) 0%, #E8D4A0 100%);
+  color: #1a1a2e;
+}
+.airport-theme .points-popup {
+  background: linear-gradient(135deg, rgba(168,200,122,0.2), rgba(168,200,122,0.1));
+  border-color: rgba(168,200,122,0.3); color: #A8C87A;
+}
+.airport-theme .memory-section {
+  background: linear-gradient(135deg, rgba(212,165,165,0.1), rgba(201,168,76,0.1));
+  border-color: rgba(255,255,255,0.15);
+}
+.airport-theme .memory-title { color: var(--gold); }
+.airport-theme .memory-text { color: rgba(255,255,255,0.85); }
+
 /* ── Locked Area ───────────────────────── */
 .locked-hint {
   display: inline-block; font-size: 0.75rem; color: var(--text-muted);
@@ -1068,6 +1273,8 @@ body {
   .score-breakdown { grid-template-columns: repeat(2, 1fr); }
   .badge-grid { grid-template-columns: repeat(2, 1fr); }
   .score-total-value { font-size: 1.6rem; }
+  .photo-cards-grid { grid-template-columns: 1fr; }
+  .ig-mockup { max-width: 100%; }
 }
 
 /* ── Leaflet Map Overrides ─────────────── */

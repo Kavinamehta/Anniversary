@@ -122,50 +122,197 @@
       <div class="landing-info">
         <div class="info-row"><span class="info-label">Players</span><span class="info-sep">▸</span><span class="info-value">Sarthak + Kavina</span></div>
         <div class="info-row"><span class="info-label">Mode</span><span class="info-sep">▸</span><span class="info-value">Co-Op</span></div>
-        <div class="info-row"><span class="info-label">Difficulty</span><span class="info-sep">▸</span><span class="info-value">Long Distance → Expert</span></div>
+        <div class="info-row"><span class="info-label">Difficulty</span><span class="info-sep">▸</span><span class="info-value">Time Zones + Patience</span></div>
       </div>
       <button class="landing-btn" onclick="pressStart()"><span class="btn-icon">▶</span> Press Start</button>
       <div class="landing-hearts" aria-hidden="true"><span>💛</span><span>✦</span><span>♡</span><span>✦</span><span>💛</span></div>
     </div>
   </section>
 
-  <!-- ═══ LEVEL 1 – MEET CUTE ═══ -->
-  <section id="screen-level1" class="screen">
+  <!-- ═══ LEVEL 1 – THE MEET CUTE (4 Stages) ═══ -->
+
+  <!-- Stage 1 – The Almost Interaction -->
+  <section id="screen-level1-s1" class="screen">
     <div class="level-wrapper">
       <div class="level-header">
         <div class="level-tag">🟢 Level 1</div>
         <h2 class="level-title">The Meet Cute</h2>
-        <div class="level-date">08 August 2022</div>
+        <div class="level-date">August – October 2022</div>
       </div>
       <div class="narrative-card">
-        Two people attended a wedding in August 2022.<br>
-        It was meant to celebrate someone else's love story.<br>
-        <strong>Plot twist: it started theirs.</strong>
+        7th August 2022.<br>
+        A wedding.<br>
+        Two people noticed each other.<br>
+        <strong>And then… nothing happened.</strong>
+      </div>
+      <div class="stage-divider"></div>
+      <div class="stage-header">
+        <div class="stage-tag">Stage 1</div>
+        <div class="stage-title">The Almost Interaction</div>
+        <div class="stage-date">7–8 August</div>
       </div>
       <div class="choices-label">What do you do?</div>
       <div class="choices-grid">
-        <button class="choice-btn" onclick="makeChoice1('ignore')"><span class="choice-icon">🙄</span><span class="choice-text">Ignore</span><span class="choice-arrow">›</span></button>
-        <button class="choice-btn" onclick="makeChoice1('polite')"><span class="choice-icon">🤝</span><span class="choice-text">Be polite</span><span class="choice-arrow">›</span></button>
-        <button class="choice-btn" onclick="makeChoice1('talk')"><span class="choice-icon">💬</span><span class="choice-text">Actually talk</span><span class="choice-arrow">›</span></button>
+        <button class="choice-btn" onclick="makeChoiceL1S1('say_hi')"><span class="choice-icon">👋</span><span class="choice-text">Go say hi</span><span class="choice-arrow">›</span></button>
+        <button class="choice-btn" onclick="makeChoiceL1S1('notice')"><span class="choice-icon">👀</span><span class="choice-text">Just notice and move on</span><span class="choice-arrow">›</span></button>
+        <button class="choice-btn" onclick="makeChoiceL1S1('pretend')"><span class="choice-icon">😶</span><span class="choice-text">Pretend not to look</span><span class="choice-arrow">›</span></button>
       </div>
-      <div class="outcome-box wrong" id="l1-wrong" style="display:none">
-        <p>⚠️ Alternate universe unlocked: We remain strangers.</p>
-        <div class="btn-row" style="margin-top:12px"><button class="btn-secondary" onclick="retryLevel1()">↩ Try Again</button></div>
+      <div class="outcome-box wrong" id="l1s1-wrong" style="display:none">
+        <p></p>
+        <div class="btn-row" style="margin-top:12px"><button class="btn-secondary" onclick="retryL1S1()">↩ Try Again</button></div>
       </div>
-      <div class="outcome-box correct" id="l1-correct" style="display:none"><p>✅ Good choice. The best one, actually.</p></div>
-      <div class="points-popup" id="l1-points"><span>✨</span> +10 Chemistry Points</div>
-      <div class="reward-gallery" id="l1-gallery">
-        <div class="photo-slot"><span class="photo-icon">💬</span>First Conversation</div>
-        <div class="photo-slot"><span class="photo-icon">📸</span>The Wedding</div>
+      <div class="outcome-box correct" id="l1s1-correct" style="display:none">
+        <p>They noticed. But didn't talk.<br>Sometimes timing needs a pause.</p>
       </div>
-      <div class="memory-section" id="l1-memory">
-        <div class="memory-title">💬 Memory Unlocked</div>
-        <p class="memory-text">"We talked. And then we didn't stop."</p>
+      <div class="points-popup" id="l1s1-points"><span>✨</span> +5 Curiosity Points</div>
+      <div class="photo-cards-grid" id="l1s1-gallery" style="display:none">
+        <div class="photo-card">
+          <span class="photo-card-icon">👰</span>
+          <span class="photo-card-caption">Her, enjoying the wedding with her family</span>
+        </div>
+        <div class="photo-card">
+          <span class="photo-card-icon">🤵</span>
+          <span class="photo-card-caption">Him, just chilling with his friends</span>
+        </div>
       </div>
-      <div class="btn-row"><button class="btn-primary hidden" id="l1-continue" onclick="goToLevel('level2')">Continue to Level 2 ›</button></div>
+      <div class="btn-row"><button class="btn-primary hidden" id="l1s1-continue" onclick="goToLevel('level1-s2')">Next Stage ›</button></div>
       <div style="text-align:center;margin-top:24px">
         <span class="locked-hint" onclick="showEasterEgg()">🔒 Try to skip ahead?</span>
       </div>
+    </div>
+  </section>
+
+  <!-- Stage 2 – The Instagram Hi -->
+  <section id="screen-level1-s2" class="screen">
+    <div class="level-wrapper">
+      <div class="level-header">
+        <button class="back-btn" onclick="goBack()">‹ Back</button>
+        <div class="level-tag">🟢 Level 1</div>
+        <h2 class="level-title">The Meet Cute</h2>
+      </div>
+      <div class="stage-header">
+        <div class="stage-tag">Stage 2</div>
+        <div class="stage-title">The DM That Changed Everything</div>
+        <div class="stage-date">9th / 10th August</div>
+      </div>
+      <div class="narrative-card">
+        A few days later, a simple message appeared.
+      </div>
+      <div class="ig-mockup" id="ig-mockup">
+        <div class="ig-mockup-header">
+          <div class="ig-avatar">💬</div>
+          <span class="ig-username">Direct Message</span>
+          <span class="ig-brand">Instagram</span>
+        </div>
+        <div class="ig-messages">
+          <div class="ig-timestamp">9 August 2022</div>
+          <div class="ig-bubble sent" id="ig-msg1">Hi!</div>
+          <div class="ig-bubble sent" id="ig-msg2">Also… I have got a little crush on you.</div>
+        </div>
+      </div>
+      <div class="btn-row" id="l1s2-open-row">
+        <button class="btn-primary" id="l1s2-open-btn" onclick="handleOpenMessage()">📩 Open Message</button>
+      </div>
+      <div class="points-popup" id="l1s2-points"><span>💙</span> +10 Courage Points · +10 Chemistry Points</div>
+      <div class="photo-cards-grid" id="l1s2-gallery" style="display:none">
+        <div class="photo-card">
+          <span class="photo-card-icon">📱</span>
+          <span class="photo-card-caption">First message screenshot</span>
+        </div>
+      </div>
+      <div class="btn-row"><button class="btn-primary hidden" id="l1s2-continue" onclick="goToLevel('level1-s3')">Continue ›</button></div>
+    </div>
+  </section>
+
+  <!-- Stage 3 – The Café Meeting -->
+  <section id="screen-level1-s3" class="screen">
+    <div class="level-wrapper">
+      <div class="level-header">
+        <button class="back-btn" onclick="goBack()">‹ Back</button>
+        <div class="level-tag">🟢 Level 1</div>
+        <h2 class="level-title">The Meet Cute</h2>
+      </div>
+      <div class="stage-header">
+        <div class="stage-tag">Stage 3</div>
+        <div class="stage-title">The Café Meeting</div>
+        <div class="stage-date">1 September 2022</div>
+      </div>
+      <div class="narrative-card cafe-narrative">
+        They finally met.<br>
+        Not as strangers.<br>
+        Not as a couple.<br>
+        <strong>Just… two people seeing what this could be.</strong>
+      </div>
+      <div class="choices-label">What do you do?</div>
+      <div class="choices-grid">
+        <button class="choice-btn" onclick="makeChoiceL1S3('scared')"><span class="choice-icon">😰</span><span class="choice-text">Be scared and avoid meeting</span><span class="choice-arrow">›</span></button>
+        <button class="choice-btn" onclick="makeChoiceL1S3('pretend')"><span class="choice-icon">🤷</span><span class="choice-text">Pretend it's not important</span><span class="choice-arrow">›</span></button>
+        <button class="choice-btn" onclick="makeChoiceL1S3('show_up')"><span class="choice-icon">☕</span><span class="choice-text">Actually show up</span><span class="choice-arrow">›</span></button>
+      </div>
+      <div class="outcome-box wrong" id="l1s3-wrong" style="display:none">
+        <p></p>
+        <div class="btn-row" style="margin-top:12px"><button class="btn-secondary" onclick="retryL1S3()">↩ Try Again</button></div>
+      </div>
+      <div class="outcome-box correct" id="l1s3-correct" style="display:none">
+        <p>☕ Good choice. You showed up. That's what mattered.</p>
+      </div>
+      <div class="points-popup" id="l1s3-points"><span>🎯</span> +15 Intentionality Points</div>
+      <div class="memory-section" id="l1s3-memory">
+        <div class="memory-title">📸 Memory Unlocked</div>
+        <p class="memory-text">"A blurred café photo a friend sneakily took."</p>
+        <div class="photo-cards-grid" style="margin-top:14px">
+          <div class="photo-card">
+            <span class="photo-card-icon">☕</span>
+            <span class="photo-card-caption">The café meeting — captured when nobody was looking</span>
+          </div>
+        </div>
+      </div>
+      <div class="btn-row"><button class="btn-primary hidden" id="l1s3-continue" onclick="goToLevel('level1-s4')">Continue ›</button></div>
+    </div>
+  </section>
+
+  <!-- Stage 4 – The Airport Call -->
+  <section id="screen-level1-s4" class="screen airport-theme">
+    <div class="level-wrapper">
+      <div class="level-header">
+        <button class="back-btn" onclick="goBack()">‹ Back</button>
+        <div class="level-tag">🟢 Level 1</div>
+        <h2 class="level-title">The Meet Cute</h2>
+      </div>
+      <div class="stage-header">
+        <div class="stage-tag">Stage 4</div>
+        <div class="stage-title">Departure Gate Decision</div>
+        <div class="stage-date">7 October 2022</div>
+      </div>
+      <div class="airport-departure-board">✈ DEPARTING · MUMBAI → FRANKFURT · GATE B4</div>
+      <div class="airport-flight-path">· · · ✈ · · ·</div>
+      <div class="narrative-card">
+        He was leaving for Germany.<br>
+        <strong>Some questions feel heavier when asked before takeoff.</strong>
+      </div>
+      <div class="choices-label">What do you do?</div>
+      <div class="choices-grid" id="l1s4-choices">
+        <button class="choice-btn" onclick="makeChoiceL1S4('avoid')"><span class="choice-icon">😶</span><span class="choice-text">Avoid the conversation</span><span class="choice-arrow">›</span></button>
+        <button class="choice-btn" onclick="makeChoiceL1S4('wait')"><span class="choice-icon">⏳</span><span class="choice-text">Ask to wait</span><span class="choice-arrow">›</span></button>
+        <button class="choice-btn" onclick="makeChoiceL1S4('ask_gf')"><span class="choice-icon">💛</span><span class="choice-text">Ask her to be your girlfriend</span><span class="choice-arrow">›</span></button>
+      </div>
+      <div class="outcome-box wrong" id="l1s4-wrong" style="display:none">
+        <p></p>
+        <div class="btn-row" style="margin-top:12px"><button class="btn-secondary" onclick="retryL1S4()">↩ Try Again</button></div>
+      </div>
+      <div class="reveal-step" id="l1s4-reveal1">
+        <p>She didn't say yes immediately.<br>She thought.<br>And then <span class="reveal-link" onclick="revealL1S4Final()">she chose</span>.</p>
+      </div>
+      <div class="reveal-step" id="l1s4-reveal2">
+        <p>💛 She said yes.</p>
+      </div>
+      <div class="points-popup" id="l1s4-points"><span>💍</span> +50 Commitment Points</div>
+      <div class="status-update-banner" id="l1s4-status">💛 Status Update: Relationship Official</div>
+      <div class="memory-section" id="l1s4-memory">
+        <div class="memory-title">✈️ Achievement Unlocked</div>
+        <p class="memory-text">"Long Distance Mode Activated"</p>
+      </div>
+      <div class="btn-row"><button class="btn-primary hidden" id="l1s4-continue" onclick="goToLevel('level2')">Continue to Level 2 ›</button></div>
     </div>
   </section>
 
