@@ -124,6 +124,26 @@ const SIDE_QUEST_LEVELS = ['level2', 'level3', 'level6'];
 
 /* ── DOM Helpers ─────────────────────────── */
 const $  = (sel, ctx = document) => ctx.querySelector(sel);
+
+/* ── Shared helper: highlight correct choice & show "Good choice." ── */
+function markCorrectChoice(gridId, correctValue) {
+  const grid = $(gridId);
+  if (!grid) return;
+  Array.from(grid.querySelectorAll('.choice-btn')).forEach(btn => {
+    btn.disabled = true;
+    if (btn.getAttribute('onclick') && btn.getAttribute('onclick').includes("'" + correctValue + "'")) {
+      btn.classList.add('choice-btn--correct');
+    }
+  });
+  let msg = grid.nextElementSibling;
+  if (!msg || !msg.classList.contains('good-choice-msg')) {
+    msg = document.createElement('div');
+    msg.className = 'good-choice-msg';
+    msg.textContent = 'Good choice.';
+    grid.insertAdjacentElement('afterend', msg);
+  }
+  msg.classList.add('visible');
+}
 const $$ = (sel, ctx = document) => [...ctx.querySelectorAll(sel)];
 
 /* ── Score & Badge Helpers ────────────────── */
@@ -282,6 +302,7 @@ function makeChoiceL1S1(choice) {
     updateHealthBar();
   } else if (choice === 'notice') {
     correctBox.style.display = 'block';
+    markCorrectChoice('#l1s1-choices', 'notice');
     state.relationshipHealth = Math.min(100, state.relationshipHealth + 5);
     updateHealthBar();
     pointsPop.classList.add('visible');
@@ -372,6 +393,7 @@ function makeChoiceL1S3(choice) {
     updateHealthBar();
   } else if (choice === 'show_up') {
     correctBox.style.display = 'block';
+    markCorrectChoice('#l1s3-choices', 'show_up');
     state.relationshipHealth = Math.min(100, state.relationshipHealth + 10);
     updateHealthBar();
     pointsPop.classList.add('visible');
@@ -405,7 +427,8 @@ function makeChoiceL1S4(choice) {
     state.relationshipHealth = Math.max(0, state.relationshipHealth - 5);
     updateHealthBar();
   } else if (choice === 'ask_gf') {
-    // Keep the choice buttons visible, and reveal the follow-up text below.
+    // Keep the choice buttons visible, highlight correct, and reveal follow-up text below.
+    markCorrectChoice('#l1s4-choices', 'ask_gf');
     reveal1.classList.add('visible');
   }
 }
@@ -514,6 +537,7 @@ function makeChoice2(choice) {
     updateHealthBar();
   } else if (choice === 'everyday') {
     unlockSec.classList.add('visible');
+    markCorrectChoice('#l2-choices', 'everyday');
     continueBtn.classList.remove('hidden');
     state.relationshipHealth = Math.min(100, state.relationshipHealth + 15);
     updateHealthBar();
@@ -554,6 +578,7 @@ function makeChoice3(choice) {
     updateHealthBar();
   } else if (choice === 'yes') {
     yesSection.classList.add('visible');
+    markCorrectChoice('#l3-choices', 'yes');
     pointsPop.classList.add('visible');
     continueBtn.classList.remove('hidden');
     state.relationshipHealth = Math.min(100, state.relationshipHealth + 20);

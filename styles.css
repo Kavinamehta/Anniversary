@@ -256,6 +256,29 @@ body {
 .choice-btn .choice-text { flex: 1; }
 .choice-btn .choice-arrow { font-size: 0.85rem; opacity: 0.4; transition: var(--transition); }
 .choice-btn:hover .choice-arrow { opacity: 1; transform: translateX(3px); }
+.choice-btn--correct {
+  border-color: var(--gold) !important;
+  background: var(--gold-light) !important;
+  color: var(--text) !important;
+  pointer-events: none;
+  box-shadow: 0 4px 16px var(--glow);
+}
+.choice-btn:disabled:not(.choice-btn--correct) {
+  opacity: 0.42;
+  pointer-events: none;
+  cursor: default;
+}
+.good-choice-msg {
+  display: none;
+  text-align: center;
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--gold);
+  letter-spacing: 0.06em;
+  margin: -4px 0 16px;
+}
+.good-choice-msg.visible { display: block; }
 
 .outcome-box {
   background: var(--rose-light); border: 1px solid var(--border);
@@ -998,6 +1021,14 @@ body {
 .airport-theme .choice-btn:hover {
   background: rgba(255,255,255,0.12); border-color: var(--gold);
   box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+}
+.airport-theme .choice-btn--correct {
+  background: rgba(201,168,76,0.22) !important;
+  border-color: var(--gold) !important;
+  color: var(--white) !important;
+}
+.airport-theme .choice-btn:disabled:not(.choice-btn--correct) {
+  color: rgba(255,255,255,0.35);
 }
 .airport-theme .outcome-box.wrong {
   background: rgba(232,180,160,0.15); border-color: rgba(232,180,160,0.3);
