@@ -102,6 +102,13 @@
   <span class="sq-btn-label">Side Quest</span>
 </button>
 
+<!-- ══════════ GOLDEN SAVE POINT FLOATING BUTTON (Level 3 only) ══════════ -->
+<button id="golden-save-trigger" class="golden-save-btn hidden" onclick="openGoldenSavePoint()" aria-label="Open golden save point">
+  <span class="gs-btn-glow"></span>
+  <span class="gs-btn-icon">💾</span>
+  <span class="gs-btn-label">Golden Save Point</span>
+</button>
+
 <!-- ══════════ SIDE QUEST OVERLAY ══════════ -->
 <div id="side-quest-overlay">
   <div class="side-quest-popin" id="side-quest-popin">
@@ -334,7 +341,7 @@
       </div>
 
       <div class="narrative-card">
-        You moved to Germany.<br>
+        He moved to Germany.<br>
         Distance increased.<br>
         <strong>So did intention.</strong>
       </div>
@@ -354,6 +361,7 @@
           <div class="memory-item">First late-night call — when you realized time zones were actually kind of romantic</div>
           <div class="memory-item">First "I miss you" — said casually, meant deeply</div>
           <div class="memory-item">First silly argument — about something that didn't matter at all</div>
+          <div class="memory-item">First "I Love You" — felt long before actually said</div>
         </div>
       </div>
       <div class="reward-gallery" id="l2-gallery">
@@ -374,10 +382,10 @@
         <div class="level-date">March 2023</div>
       </div>
       <div class="narrative-card">
-        You flew thousands of kilometers for one question.<br>
+        He flew thousands of kilometers for one question.<br>
         <strong>The kind that changes everything.</strong>
       </div>
-      <div class="choices-label">My move:</div>
+      <div class="choices-label">Her Move:</div>
       <div class="choices-grid" id="l3-choices">
         <button class="choice-btn" onclick="makeChoice3('panic')"><span class="choice-icon">😱</span><span class="choice-text">Panic</span><span class="choice-arrow">›</span></button>
         <button class="choice-btn" onclick="makeChoice3('think')"><span class="choice-icon">🤔</span><span class="choice-text">Keep Thinking</span><span class="choice-arrow">›</span></button>

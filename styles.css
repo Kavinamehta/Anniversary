@@ -734,6 +734,38 @@ body {
   50%      { opacity: 0.45; transform: scale(1.08); }
 }
 
+/* ── Golden Save Point Button ──────────── */
+.golden-save-btn {
+  position: fixed; right: 16px; bottom: 20%;
+  z-index: 90; display: flex; flex-direction: column; align-items: center;
+  gap: 4px; background: linear-gradient(135deg, var(--gold), #E8C84A);
+  border: 2px solid rgba(255,255,255,0.5); border-radius: 16px;
+  padding: 12px 14px; cursor: pointer; transition: var(--transition);
+  box-shadow: 0 4px 24px rgba(201,168,76,0.35);
+  animation: gsPulse 2.5s ease-in-out infinite;
+}
+.golden-save-btn:hover {
+  transform: scale(1.08); box-shadow: 0 8px 36px rgba(201,168,76,0.5);
+}
+.gs-btn-glow {
+  position: absolute; inset: -4px; border-radius: 20px;
+  background: linear-gradient(135deg, var(--gold), #E8C84A);
+  opacity: 0.3; z-index: -1; animation: gsGlow 2s ease-in-out infinite;
+}
+.gs-btn-icon { font-size: 1.5rem; }
+.gs-btn-label {
+  font-size: 0.55rem; font-weight: 700; letter-spacing: 0.06em;
+  text-transform: uppercase; color: var(--white);
+}
+@keyframes gsPulse {
+  0%, 100% { transform: scale(1); }
+  50%      { transform: scale(1.05); }
+}
+@keyframes gsGlow {
+  0%, 100% { opacity: 0.2; transform: scale(1); }
+  50%      { opacity: 0.5; transform: scale(1.1); }
+}
+
 /* ── Side Quest Overlay / Popin ────────── */
 #side-quest-overlay {
   position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 700;

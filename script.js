@@ -120,7 +120,7 @@ const ALL_BADGES = [
 ];
 
 /* ── Side-Quest Levels ───────────────────── */
-const SIDE_QUEST_LEVELS = ['level2', 'level3', 'level6'];
+const SIDE_QUEST_LEVELS = ['level2', 'level6'];
 
 /* ── DOM Helpers ─────────────────────────── */
 const $  = (sel, ctx = document) => ctx.querySelector(sel);
@@ -206,6 +206,11 @@ function showScreen(id) {
   } else {
     sqBtn.classList.add('hidden');
   }
+
+  // Golden Save Point button visibility (Level 3 only — shown after correct choice)
+  const gsBtn = $('#golden-save-trigger');
+  // Always hide on level entry; it gets revealed by makeChoice3('yes')
+  gsBtn.classList.add('hidden');
 }
 
 /* ── Progress Bar ────────────────────────── */
@@ -530,7 +535,10 @@ function makeChoice2(choice) {
 
   if (choice === 'stop' || choice === 'sometimes') {
     wrongMsg.style.display = 'block';
-    wrongMsg.querySelector('p').textContent = '❌ Wrong choice. Try Again.';
+    const msg = choice === 'stop'
+      ? '🌌 Alternate Universe Unlocked: Relationship Over'
+      : "❌ That's not enough.";
+    wrongMsg.querySelector('p').textContent = msg;
     continueBtn.classList.add('hidden');
     if (gallery) gallery.classList.remove('visible');
     state.relationshipHealth = Math.max(0, state.relationshipHealth - 5);
@@ -587,6 +595,8 @@ function makeChoice3(choice) {
     if (gallery) gallery.classList.add('visible');
     addScore('level3');
     setTimeout(() => awardBadge('boss_battle'), 1000);
+    // Reveal Golden Save Point button now that the correct choice is made
+    setTimeout(() => $('#golden-save-trigger').classList.remove('hidden'), 800);
   }
 }
 
@@ -970,7 +980,7 @@ const SIDE_QUESTS = {
       icon: '🏖️',
       title: 'Goa Expansion Pack',
       tag: 'SIDE QUEST · LEVEL 3',
-      narrative: '"Before the proposal, there was Goa. Sand, sunsets, and the kind of silence that\'s actually comfortable."',
+      narrative: '"After the question, after the Yeses, there was Goa. Sand, sunsets, water, and the kind of silence that\'s actually comfortable."',
       tropical: true,
       type: 'album',
       albumItems: [
@@ -1034,7 +1044,7 @@ function openSideQuestMenu() {
     renderSideQuest(quests[0]);
   } else {
     // Show menu
-    let html = `<div class="sq-tag">SIDE QUESTS · ${level.toUpperCase()}</div>`;
+    let html = `<div class="sq-tag">SIDE QUESTS \u00b7 ${level.toUpperCase()}</div>`;
     html += `<div class="sq-title">Choose a Side Quest</div>`;
     html += `<div class="sq-menu-list">`;
     quests.forEach((sq, i) => {
@@ -1049,6 +1059,15 @@ function openSideQuestMenu() {
     container.innerHTML = html;
   }
 
+  $('#side-quest-overlay').classList.add('visible');
+}
+
+/* ── Golden Save Point (Level 3 — Goa Expansion Pack) ── */
+function openGoldenSavePoint() {
+  const quests = SIDE_QUESTS['level3'];
+  if (!quests || !quests.length) return;
+  const container = $('#sq-content');
+  renderSideQuest(quests[0]);
   $('#side-quest-overlay').classList.add('visible');
 }
 
@@ -1077,7 +1096,12 @@ function renderSideQuest(sq) {
   if (hasMultiple) {
     html += `<button class="sq-back-btn" onclick="openSideQuestMenu()">‹ All Side Quests</button>`;
   }
-  html += `<div class="sq-tag">${sq.tag}</div>`;
+  // For level 3, display the Golden Save Point label instead of the generic side-quest tag
+  let tagText = sq.tag;
+  if (state.currentLevel === 'level3') {
+    tagText = 'Golden Save Point · Level 3';
+  }
+  html += `<div class="sq-tag">${tagText}</div>`;
   html += `<div class="sq-title">${sq.icon} ${sq.title}</div>`;
   html += `<div class="sq-narrative">${sq.narrative}</div>`;
 
@@ -1180,7 +1204,12 @@ function openAlbumItem(sqId, itemIdx) {
   const container = $('#sq-content');
 
   let html = `<button class="sq-back-btn" onclick="renderSideQuest(SIDE_QUESTS['${state.currentLevel}'].find(s=>s.id==='${sqId}'))">‹ Back to ${sq.title}</button>`;
-  html += `<div class="sq-tag">${sq.tag}</div>`;
+  // Override tag for level 3 album views as well
+  let albumTagText = sq.tag;
+  if (state.currentLevel === 'level3') {
+    albumTagText = 'Golden Save Point · Level 3';
+  }
+  html += `<div class="sq-tag">${albumTagText}</div>`;
   html += `<div class="sq-title">${item.label}</div>`;
   html += `<div class="sq-album-text">${item.text}</div>`;
   html += `<div class="sq-album-photos">`;
