@@ -405,7 +405,7 @@ function makeChoiceL1S4(choice) {
     state.relationshipHealth = Math.max(0, state.relationshipHealth - 5);
     updateHealthBar();
   } else if (choice === 'ask_gf') {
-    choices.style.display = 'none';
+    // Keep the choice buttons visible, and reveal the follow-up text below.
     reveal1.classList.add('visible');
   }
 }
