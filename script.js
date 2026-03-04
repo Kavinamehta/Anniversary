@@ -20,7 +20,10 @@ const state = {
   l2MapInit: false,
   l7MapInit: false,
   // Scoring system — tracked per category
-  points: { curiosity: 0, courage: 0, chemistry: 0, intentionality: 0, commitment: 0 },
+  points: {
+    curiosity: 0, courage: 0, chemistry: 0, intentionality: 0, commitment: 0,
+    emotional_resilience: 0, leap_of_faith: 0, trust: 0, teamwork: 0, playfulness: 0, adventure: 0
+  },
   score: 0,
   earnedBadges: [],
   bonusQuestsDone: {},
@@ -73,30 +76,30 @@ const SCORE_CONFIG = {
   l1_s2_chem:   { points: 10,  label: 'L1 Stage 2 – Chemistry', category: 'chemistry' },
   l1_s3:        { points: 15,  label: 'L1 Stage 3 – Café Meeting', category: 'intentionality' },
   l1_s4:        { points: 50,  label: 'L1 Stage 4 – Airport Decision', category: 'commitment' },
-  level2:       { points: 15,  label: 'Level 2 – Long Distance' },
-  level3:       { points: 50,  label: 'Level 3 – Proposal' },
-  level4:       { points: 20,  label: 'Level 4 – Parents' },
-  level5:       { points: 10,  label: 'Level 5 – Engagement' },
-  coop_grocery: { points: 10,  label: 'Co-Op: Grocery Raid' },
-  coop_cook:    { points: 10,  label: 'Co-Op: First Meal' },
-  coop_fight:   { points: 10,  label: 'Co-Op: First Fight' },
-  coop_sunday:  { points: 10,  label: 'Co-Op: Lazy Sunday' },
-  bonus_grocery:  { points: 5, label: 'Bonus: Grocery Raid' },
-  bonus_cooking:  { points: 5, label: 'Bonus: Cooking' },
-  bonus_pokemon:  { points: 5, label: 'Bonus: Pokémon Go' },
-  bonus_study:    { points: 5, label: 'Bonus: Study Mode' },
-  bonus_cleaning: { points: 5, label: 'Bonus: Cleaning' },
-  travel_germany:     { points: 10, label: 'Travel: Germany' },
-  travel_netherlands: { points: 10, label: 'Travel: Netherlands' },
-  travel_england:     { points: 10, label: 'Travel: England' },
-  travel_scotland:    { points: 10, label: 'Travel: Scotland' },
-  travel_luxembourg:  { points: 10, label: 'Travel: Luxembourg' },
-  travel_hungary:     { points: 10, label: 'Travel: Hungary' },
-  travel_denmark:     { points: 10, label: 'Travel: Denmark' },
-  sq_doubt:    { points: 10, label: 'Side Quest: The Doubt Level' },
-  sq_latenight:{ points: 10, label: 'Side Quest: 11:30 PM Calls' },
-  sq_goa:      { points: 10, label: 'Side Quest: Goa' },
-  sq_distance_mini: { points: 10, label: 'Side Quest: Mini Distance' },
+  level2:       { points: 15,  label: 'Level 2 – Long Distance',    category: 'emotional_resilience' },
+  level3:       { points: 50,  label: 'Level 3 – Proposal',          category: 'leap_of_faith' },
+  level4:       { points: 20,  label: 'Level 4 – Parents',           category: 'trust' },
+  level5:       { points: 10,  label: 'Level 5 – Engagement',        category: 'commitment' },
+  coop_grocery: { points: 10,  label: 'Co-Op: Grocery Raid',         category: 'teamwork' },
+  coop_cook:    { points: 10,  label: 'Co-Op: First Meal',           category: 'teamwork' },
+  coop_fight:   { points: 10,  label: 'Co-Op: First Fight',          category: 'trust' },
+  coop_sunday:  { points: 10,  label: 'Co-Op: Lazy Sunday',          category: 'playfulness' },
+  bonus_grocery:  { points: 5, label: 'Bonus: Grocery Raid',         category: 'teamwork' },
+  bonus_cooking:  { points: 5, label: 'Bonus: Cooking',              category: 'teamwork' },
+  bonus_pokemon:  { points: 5, label: 'Bonus: Pokémon Go',           category: 'playfulness' },
+  bonus_study:    { points: 5, label: 'Bonus: Study Mode',           category: 'intentionality' },
+  bonus_cleaning: { points: 5, label: 'Bonus: Cleaning',             category: 'teamwork' },
+  travel_germany:     { points: 10, label: 'Travel: Germany',        category: 'adventure' },
+  travel_netherlands: { points: 10, label: 'Travel: Netherlands',    category: 'adventure' },
+  travel_england:     { points: 10, label: 'Travel: England',        category: 'adventure' },
+  travel_scotland:    { points: 10, label: 'Travel: Scotland',       category: 'adventure' },
+  travel_luxembourg:  { points: 10, label: 'Travel: Luxembourg',     category: 'adventure' },
+  travel_hungary:     { points: 10, label: 'Travel: Hungary',        category: 'adventure' },
+  travel_denmark:     { points: 10, label: 'Travel: Denmark',        category: 'adventure' },
+  sq_doubt:    { points: 10, label: 'Side Quest: The Doubt Level',   category: 'trust' },
+  sq_latenight:{ points: 10, label: 'Side Quest: 11:30 PM Calls',   category: 'chemistry' },
+  sq_goa:      { points: 10, label: 'Side Quest: Goa',               category: 'adventure' },
+  sq_distance_mini: { points: 10, label: 'Side Quest: Mini Distance', category: 'intentionality' },
 };
 
 const MAX_SCORE = Object.values(SCORE_CONFIG).reduce((sum, c) => sum + c.points, 0);
@@ -109,11 +112,16 @@ const ALL_BADGES = [
   { id: 'boss_battle',   icon: '💍', name: 'Boss Battle Cleared',    desc: '+50 Commitment Points' },
   { id: 'patience',      icon: '🏅', name: 'Patience +100',          desc: 'Both families on board.' },
   { id: 'coop_irl',      icon: '🏠', name: 'Living Together IRL',    desc: 'Co-Op Mode: Fully Active' },
-  { id: 'travel_germany',     icon: '✈️', name: 'Germany Explored',      desc: 'Home base unlocked.' },
-  { id: 'travel_france',      icon: '✈️', name: 'France Explored',       desc: 'Croissants acquired.' },
-  { id: 'travel_netherlands', icon: '✈️', name: 'Netherlands Explored',  desc: 'Stroopwafels secured.' },
-  { id: 'travel_austria',     icon: '✈️', name: 'Austria Explored',      desc: 'Sachertorte tasted.' },
-  { id: 'travel_czech',       icon: '✈️', name: 'Czech Republic Explored', desc: 'Prague at golden hour.' },
+  { id: 'travel_germany',     icon: '✈️', name: 'Germany Explored',        desc: 'Home base unlocked.' },
+  { id: 'travel_france',      icon: '✈️', name: 'France Explored',         desc: 'Croissants acquired.' },
+  { id: 'travel_netherlands', icon: '✈️', name: 'Netherlands Explored',    desc: 'Stroopwafels secured.' },
+  { id: 'travel_england',     icon: '🏴󠁧󠁢󠁥󠁮󠁧󠁿', name: 'England Explored',         desc: 'London calling.' },
+  { id: 'travel_scotland',    icon: '🏴󠁧󠁢󠁳󠁣󠁴󠁿', name: 'Scotland Explored',        desc: 'Highlands conquered.' },
+  { id: 'travel_luxembourg',  icon: '🇱🇺', name: 'Luxembourg Explored',      desc: 'Tiny country, big memories.' },
+  { id: 'travel_hungary',     icon: '🇭🇺', name: 'Hungary Explored',         desc: 'Budapest nights.' },
+  { id: 'travel_denmark',     icon: '🇩🇰', name: 'Denmark Explored',         desc: 'Hygge unlocked.' },
+  { id: 'travel_austria',     icon: '✈️', name: 'Austria Explored',         desc: 'Sachertorte tasted.' },
+  { id: 'travel_czech',       icon: '✈️', name: 'Czech Republic Explored',  desc: 'Prague at golden hour.' },
   { id: 'sq_doubt',      icon: '🛡️', name: 'Trust Shield +20',       desc: 'The Doubt Level cleared.' },
   { id: 'sq_latenight',  icon: '📞', name: 'Night Owl Badge',        desc: '11:30 PM calls survived.' },
   { id: 'sq_goa',        icon: '🏖️', name: 'Goa Memory Unlocked',    desc: 'Beach expansion complete.' },
@@ -1209,9 +1217,9 @@ function closeSideQuest() {
   popinEl.classList.remove('sq-tropical');
 }
 
-/* ── Level 9: Future Mode ────────────────── */
-function showLevel9() {
-  const reveal = $('#level9-reveal');
+/* ── Level 8: Future Mode ────────────────── */
+function showLevel8() {
+  const reveal = $('#level8-reveal');
   if (reveal.style.display === 'block') {
     // Toggle off
     reveal.style.display = 'none';
@@ -1220,7 +1228,7 @@ function showLevel9() {
   reveal.style.display = 'block';
 
   // Reset animations by re-triggering
-  const lines = $$('.l9-line', reveal);
+  const lines = $$('.l8-line', reveal);
   lines.forEach(el => {
     el.style.animation = 'none';
     void el.offsetWidth; // force reflow
@@ -1493,9 +1501,83 @@ function goToLevel(id) {
   }
 }
 
+/* ── Final Screen – Populate Score & Badges ─ */
+function populateFinalScreen() {
+  // — Total score & bar —
+  const totalScoreEl = $('#final-total-score');
+  const totalFillEl  = $('#final-total-fill');
+  if (totalScoreEl) totalScoreEl.textContent = state.score + ' / ' + MAX_SCORE;
+  if (totalFillEl) {
+    const pct = MAX_SCORE > 0 ? Math.round((state.score / MAX_SCORE) * 100) : 0;
+    totalFillEl.style.width = pct + '%';
+  }
+
+  // — Countries count —
+  const countriesEl = $('#final-countries-count');
+  if (countriesEl) countriesEl.textContent = state.countriesVisited.length;
+
+  // — Per-category score breakdown —
+  const breakdown = $('#final-score-breakdown');
+  if (breakdown) {
+    const CATEGORY_DISPLAY = [
+      { key: 'curiosity',            label: '🔍 Curiosity' },
+      { key: 'courage',              label: '⚡ Courage' },
+      { key: 'chemistry',            label: '✨ Chemistry' },
+      { key: 'intentionality',       label: '🎯 Intentionality' },
+      { key: 'commitment',           label: '💍 Commitment' },
+      { key: 'emotional_resilience', label: '🌊 Emotional Resilience' },
+      { key: 'leap_of_faith',        label: '🕊️ Leap of Faith' },
+      { key: 'trust',                label: '🛡️ Trust' },
+      { key: 'teamwork',             label: '🤝 Teamwork' },
+      { key: 'playfulness',          label: '🎮 Playfulness' },
+      { key: 'adventure',            label: '🌍 Adventure' },
+    ];
+
+    // Compute possible points per category from SCORE_CONFIG
+    const possibleMap = {};
+    CATEGORY_DISPLAY.forEach(c => { possibleMap[c.key] = 0; });
+    Object.values(SCORE_CONFIG).forEach(cfg => {
+      if (cfg.category && possibleMap.hasOwnProperty(cfg.category)) {
+        possibleMap[cfg.category] += cfg.points;
+      }
+    });
+
+    breakdown.innerHTML = CATEGORY_DISPLAY.map(({ key, label }) => {
+      const earned   = state.points[key] || 0;
+      const possible = possibleMap[key] || 0;
+      const pct      = possible > 0 ? Math.round((earned / possible) * 100) : 0;
+      const complete = earned >= possible && possible > 0;
+      return `
+        <div class="score-card${complete ? ' complete' : ''}">
+          <div class="score-card-label">${label}</div>
+          <div class="score-card-value">${earned} / ${possible}</div>
+          <div class="score-card-bar"><div class="score-card-fill" style="width:${pct}%"></div></div>
+        </div>`;
+    }).join('');
+  }
+
+  // — Earned badges —
+  const badgeGrid  = $('#final-badges-list');
+  const badgeCount = $('#final-badge-count');
+  if (badgeGrid) {
+    if (state.earnedBadges.length === 0) {
+      badgeGrid.innerHTML = '<p style="color:var(--text-muted);font-size:0.85rem;text-align:center;grid-column:1/-1">No badges earned yet.</p>';
+    } else {
+      badgeGrid.innerHTML = state.earnedBadges.map(b => `
+        <div class="badge-item unlocked">
+          <div class="badge-item-icon">${b.icon}</div>
+          <div class="badge-item-name">${b.name}</div>
+          <div class="badge-item-desc">${b.desc}</div>
+        </div>`).join('');
+    }
+  }
+  if (badgeCount) badgeCount.textContent = '(' + state.earnedBadges.length + ' earned)';
+}
+
 /* ── Final Screen Init ───────────────────── */
 function initFinal() {
   showScreen('final');
+  populateFinalScreen();
   setTimeout(() => {
     const fill = $('#final-progress-fill');
     if (fill) fill.style.width = '100%';
@@ -1523,7 +1605,10 @@ function resetAndRestart() {
   state.l2MapInit = false;
   state.l7MapInit = false;
   // Reset scoring
-  state.points = { curiosity: 0, courage: 0, chemistry: 0, intentionality: 0, commitment: 0 };
+  state.points = {
+    curiosity: 0, courage: 0, chemistry: 0, intentionality: 0, commitment: 0,
+    emotional_resilience: 0, leap_of_faith: 0, trust: 0, teamwork: 0, playfulness: 0, adventure: 0
+  };
   state.score = 0;
   state.earnedBadges = [];
   state.bonusQuestsDone = {};
@@ -1605,8 +1690,8 @@ function resetAndRestart() {
   // Final progress bar
   const finalFill = $('#final-progress-fill'); if (finalFill) finalFill.style.width = '0%';
 
-  // Level 9
-  const l9Reveal = $('#level9-reveal'); if (l9Reveal) l9Reveal.style.display = 'none';
+  // Level 8
+  const l8Reveal = $('#level8-reveal'); if (l8Reveal) l8Reveal.style.display = 'none';
 
   // Header / status bars
   const healthFill = $('#health-fill-bar'); if (healthFill) healthFill.style.width = '40%';

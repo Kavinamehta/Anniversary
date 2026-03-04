@@ -659,8 +659,8 @@ body {
 }
 .final-progress-label { font-size: 0.8rem; font-weight: 700; color: var(--text-muted); text-align: center; }
 
-/* Level 9 Locked Button */
-.level9-locked-btn {
+/* Level 8 Locked Button */
+.level8-locked-btn {
   display: inline-flex; align-items: center; gap: 10px;
   background: linear-gradient(135deg, rgba(45,45,45,0.06), rgba(45,45,45,0.12));
   border: 2px dashed var(--border); border-radius: var(--radius);
@@ -668,36 +668,36 @@ body {
   font-weight: 700; color: var(--text-muted); cursor: pointer;
   transition: var(--transition);
 }
-.level9-locked-btn:hover {
+.level8-locked-btn:hover {
   border-color: var(--rose); background: var(--rose-light); color: var(--text);
 }
-.l9-lock { font-size: 1.2rem; }
-.l9-badge {
+.l8-lock { font-size: 1.2rem; }
+.l8-badge {
   font-size: 0.68rem; font-weight: 700; background: var(--rose-light);
   border: 1px solid var(--border); border-radius: 99px; padding: 2px 8px;
   color: var(--text-muted);
 }
 
-/* Level 9 Reveal */
-.level9-reveal {
+/* Level 8 Reveal */
+.level8-reveal {
   margin-top: 20px; text-align: center;
   animation: fadeIn 0.5s ease both;
 }
-.level9-text {
+.level8-text {
   display: flex; flex-direction: column; gap: 8px;
 }
-.l9-line {
+.l8-line {
   font-family: var(--font-head); font-size: 1.1rem; font-style: italic;
-  color: var(--text); opacity: 0; animation: l9FadeIn 0.6s ease forwards;
+  color: var(--text); opacity: 0; animation: l8FadeIn 0.6s ease forwards;
 }
-.l9-line:nth-child(1) { animation-delay: 0.2s; }
-.l9-line:nth-child(2) { animation-delay: 0.7s; }
-.l9-line:nth-child(3) { animation-delay: 1.2s; }
-.l9-line:nth-child(4) { animation-delay: 1.7s; }
-.l9-line:nth-child(5) { animation-delay: 2.2s; }
-.l9-line:nth-child(6) { animation-delay: 2.7s; }
+.l8-line:nth-child(1) { animation-delay: 0.2s; }
+.l8-line:nth-child(2) { animation-delay: 0.7s; }
+.l8-line:nth-child(3) { animation-delay: 1.2s; }
+.l8-line:nth-child(4) { animation-delay: 1.7s; }
+.l8-line:nth-child(5) { animation-delay: 2.2s; }
+.l8-line:nth-child(6) { animation-delay: 2.7s; }
 
-@keyframes l9FadeIn {
+@keyframes l8FadeIn {
   from { opacity: 0; transform: translateY(10px); }
   to   { opacity: 1; transform: translateY(0); }
 }
