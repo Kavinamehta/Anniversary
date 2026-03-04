@@ -1339,7 +1339,7 @@ function showAchievement(icon, name, desc) {
 
   achievementTimer = setTimeout(() => {
     popup.classList.remove('visible');
-  }, 4000);
+  }, 17000);
 }
 
 function closeAchievement() {
@@ -1482,6 +1482,7 @@ function animateParticles() {
 
 /* ── Level Navigation Hooks ──────────────── */
 function goToLevel(id) {
+  closeAchievement();
   if (id === 'level2') {
     showScreen(id);
     setTimeout(initLevel2, 300);
