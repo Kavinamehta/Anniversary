@@ -1278,33 +1278,97 @@ function toggleCard() {
 }
 
 function createPetals() {
-  const symbols  = ['🌸','🌺','🌷','❤️','✨','💛','🌹','💮','🌼','🎀'];
-  const cardEl   = $('#gc-card');
+  const symbols = ['🌸','🌺','🌷','❤️','✨','💛','🌹','💮','🌼','🎀','💕','🌟','💫','🩷'];
+  const cardEl  = $('#gc-card');
   if (!cardEl) return;
+
   const rect = cardEl.getBoundingClientRect();
-  const cx   = rect.left + rect.width  / 2;
-  const cy   = rect.top  + rect.height / 2;
+  // Burst origin: center fold of the open book
+  const ox = rect.left + rect.width  / 2;
+  const oy = rect.top  + rect.height / 2;
 
-  for (let i = 0; i < 32; i++) {
-    const petal = document.createElement('span');
-    petal.className  = 'gc-petal';
-    petal.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+  const count = 55 + Math.floor(Math.random() * 16); // 55–70 particles
+  const particles = [];
 
-    // Random burst direction and distance
-    const angle    = Math.random() * 360;
-    const distance = 50 + Math.random() * 130;
-    const startX   = cx + Math.cos(angle * Math.PI / 180) * distance * 0.3;
-    const startY   = cy + Math.sin(angle * Math.PI / 180) * distance * 0.3;
+  for (let i = 0; i < count; i++) {
+    const el = document.createElement('span');
+    el.className   = 'gc-petal';
+    el.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+    el.style.fontSize = (0.75 + Math.random() * 0.85) + 'rem';
+    el.style.opacity  = '0';
+    document.body.appendChild(el);
 
-    petal.style.left             = startX + 'px';
-    petal.style.top              = startY + 'px';
-    petal.style.fontSize         = (0.85 + Math.random() * 0.9) + 'rem';
-    petal.style.animationDelay   = (Math.random() * 0.45) + 's';
-    petal.style.animationDuration = (1.8 + Math.random() * 1.2) + 's';
+    // Launch angle: upward arc 25°–155°
+    const angleDeg = 25 + Math.random() * 130;
+    const angleRad = angleDeg * Math.PI / 180;
+    const speed    = 7 + Math.random() * 14; // px per frame at 60 fps
 
-    document.body.appendChild(petal);
-    setTimeout(() => { if (petal.parentNode) petal.remove(); }, 3400);
+    particles.push({
+      el,
+      x:        ox,
+      y:        oy,
+      vx:       Math.cos(angleRad) * speed,
+      vy:      -Math.sin(angleRad) * speed, // negative = upward in CSS coords
+      angle:    Math.random() * 360,
+      rotSpeed: (Math.random() - 0.5) * 9,  // deg/frame
+      maxLife:  2400 + Math.random() * 1600, // 2.4–4 s in ms
+      life:     0,
+      delay:    Math.random() * 150,         // up to 150 ms stagger
+    });
   }
+
+  const GRAVITY = 0.30;  // px/frame² downward acceleration
+  const DRAG    = 0.989; // horizontal air resistance per frame
+  let lastTime  = null;
+
+  function animate(timestamp) {
+    if (!lastTime) lastTime = timestamp;
+    const dt     = Math.min(timestamp - lastTime, 50); // cap to avoid jumps after tab switch
+    lastTime     = timestamp;
+    const frames = dt / 16.667; // scale to 60-fps units
+
+    let anyAlive = false;
+
+    for (const p of particles) {
+      p.life += dt;
+
+      if (p.life < p.delay) {
+        anyAlive = true;
+        continue;
+      }
+
+      const activeMs = p.life - p.delay;
+      const progress = activeMs / p.maxLife;
+
+      if (progress >= 1) {
+        if (p.el.parentNode) p.el.remove();
+        continue;
+      }
+
+      anyAlive = true;
+
+      // Physics
+      p.vy     += GRAVITY * frames;
+      p.vx     *= Math.pow(DRAG, frames);
+      p.x      += p.vx * frames;
+      p.y      += p.vy * frames;
+      p.angle  += p.rotSpeed * frames;
+
+      // Opacity: fade in over first 80 ms, fade out over last 30% of life
+      const fadeIn  = Math.min(activeMs / 80, 1);
+      const fadeOut = progress > 0.70 ? 1 - (progress - 0.70) / 0.30 : 1;
+      const scale   = 0.55 + (1 - progress) * 0.45;
+
+      p.el.style.left      = p.x + 'px';
+      p.el.style.top       = p.y + 'px';
+      p.el.style.opacity   = (fadeIn * fadeOut).toFixed(3);
+      p.el.style.transform = `rotate(${p.angle.toFixed(1)}deg) scale(${scale.toFixed(3)})`;
+    }
+
+    if (anyAlive) requestAnimationFrame(animate);
+  }
+
+  requestAnimationFrame(animate);
 }
 
 function closeGreetingCard() {
