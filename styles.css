@@ -1604,14 +1604,51 @@ body {
   opacity: 0.8;
 }
 
-/* ── Inside Page Content ───────────────── */
-.gc-back-deco-top,
-.gc-back-deco-bottom {
-  font-size: 1rem;
-  letter-spacing: 0.16em;
-  opacity: 0.7;
-  user-select: none;
+/* ── SVG Hand-Drawn Doodles ─────────────── */
+@keyframes gcRingSparkle {
+  0%, 80%, 100% { opacity: 0; transform: scale(0.3) rotate(0deg); }
+  88%, 92%      { opacity: 1; transform: scale(1) rotate(25deg); }
 }
+
+.gc-svg-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.gc-svg {
+  position: absolute;
+  user-select: none;
+  pointer-events: none;
+}
+
+/* ── Left page doodles ── */
+.gc-svg-heart-tl   { width: 30px; top: 14px;  left: 12px;  opacity: 0.85; transform: rotate(-12deg); }
+.gc-svg-sparkle-tr { width: 28px; top: 12px;  right: 14px; opacity: 0.8; }
+.gc-svg-flower-l   { width: 34px; top: 38%;   left: 6px;   opacity: 0.8; transform: rotate(8deg); }
+.gc-svg-coffee     { width: 44px; bottom: 10%; left: 50%; transform: translateX(-50%); opacity: 0.75; }
+.gc-svg-paws-bl    { width: 36px; bottom: 14px; left: 8px;  opacity: 0.8; transform: rotate(-8deg); }
+.gc-svg-plane-br   { width: 28px; bottom: 16px; right: 10px; opacity: 0.8; transform: rotate(15deg); }
+
+/* ── Right page doodles ── */
+.gc-svg-sparkles-tl { width: 34px; top: 10px;  left: 8px;   opacity: 0.8; }
+.gc-svg-smileys-tr  { width: 42px; top: 10px;  right: 6px;  opacity: 0.75; }
+.gc-svg-hearts-mid  { width: 28px; top: 36%;   right: 8px;  opacity: 0.8; }
+.gc-svg-infinity    { width: 38px; top: 52%;   right: 6px;  opacity: 0.7; }
+.gc-svg-ring        { width: 34px; bottom: 20%; left: 50%; transform: translateX(-50%); opacity: 0.8; }
+.gc-svg-ring-sparkle {
+  width: 18px;
+  bottom: calc(20% + 28px);
+  left: calc(50% + 2px);
+  transform: translateX(-50%);
+  opacity: 0;
+  animation: gcRingSparkle 2.5s ease-in-out infinite;
+}
+.gc-svg-pin-bl      { width: 24px; bottom: 12px; left: 10px; opacity: 0.75; }
+.gc-svg-flower-br   { width: 28px; bottom: 12px; right: 8px; opacity: 0.8; transform: rotate(-6deg); }
+
+/* ── Inside Page Content ───────────────── */
 .gc-back-heading {
   font-family: var(--font-head);
   font-size: 1.1rem;
@@ -1665,7 +1702,12 @@ body {
   .gc-back-heading { font-size: 0.95rem; }
   .gc-front-label { font-size: 1.15rem; }
   .gc-page-left, .gc-page-right { padding: 18px 14px; gap: 8px; }
-  .gc-back-doodles { gap: 5px; font-size: 1rem; }
   .gc-back-note { font-size: 0.82rem; }
   .gc-back-sub { font-size: 0.75rem; }
+  .gc-svg { transform: scale(0.8); }
+  .gc-svg-coffee { width: 28px; }
+  .gc-svg-smileys-tr { width: 26px; }
+
+  /* mobile: lower the coffee cups further to avoid overlapping text */
+  .gc-svg-coffee { bottom: 6% !important; }
 }

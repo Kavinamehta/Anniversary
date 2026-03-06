@@ -621,23 +621,50 @@
 
       <!-- Left inside page (stationary, hidden behind cover when closed) -->
       <div class="gc-page-left" onclick="toggleCard()">
-        <div class="gc-back-deco-top">🌸 &nbsp; ✨ &nbsp; 🌺</div>
+        <!-- SVG hand-drawn doodles -->
+        <div class="gc-svg-layer" aria-hidden="true">
+          <!-- Heart — top-left -->
+          <svg class="gc-svg gc-svg-heart-tl" viewBox="0 0 24 24" stroke="#c4787a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path fill="#f2c4c6" d="M12 21C12 21 3 13.5 3 8.5c0-2 1.3-4 3.5-4C8.5 4.5 10.5 6 12 8c1.5-2 3.5-3.5 5.5-3.5C19.7 4.5 21 6.5 21 8.5c0 5-9 12.5-9 12.5z"/></svg>
+          <!-- Sparkle — top-right -->
+          <svg class="gc-svg gc-svg-sparkle-tr" viewBox="0 0 24 24" fill="none" stroke="#b8922e" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+          <!-- Flower — left of quote -->
+          <svg class="gc-svg gc-svg-flower-l" viewBox="0 0 28 28" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="14" cy="10" r="3" stroke="#c4787a" fill="#fce4e6"/><circle cx="10" cy="7" r="2.5" stroke="#d4939a" fill="#fce4e6" opacity=".75"/><circle cx="18" cy="7" r="2.5" stroke="#d4939a" fill="#fce4e6" opacity=".75"/><circle cx="10" cy="13" r="2.5" stroke="#d4939a" fill="#fce4e6" opacity=".75"/><circle cx="18" cy="13" r="2.5" stroke="#d4939a" fill="#fce4e6" opacity=".75"/><path d="M14 13v12" stroke="#7aab72"/><path d="M14 19c-3-1.5-5-1-6 0" stroke="#7aab72"/></svg>
+          <!-- Coffee cups clinking -->
+          <svg class="gc-svg gc-svg-coffee" viewBox="0 0 32 24" stroke="#b09a78" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path fill="#f5ebe0" d="M4 10h8v9a2 2 0 01-2 2H6a2 2 0 01-2-2v-9z"/><path fill="none" d="M12 13h2a2 2 0 010 4h-2"/><path fill="none" d="M6 7c0-2 1-3 2-3M10 8c0-2.5 1-3.5 2-3.5"/><path fill="#f5ebe0" d="M20 10h8v9a2 2 0 01-2 2h-4a2 2 0 01-2-2v-9z"/><path fill="none" d="M20 13h-2a2 2 0 000 4h2"/><path fill="none" d="M22 7c0-2 1-3 2-3M26 8c0-2.5 1-3.5 2-3.5"/><path d="M14 14l2-2" opacity=".6" fill="none"/></svg>
+          <!-- Paw prints — bottom-left -->
+          <svg class="gc-svg gc-svg-paws-bl" viewBox="0 0 28 20" stroke="#c47e72" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="6" cy="12" rx="3" ry="3.5" fill="#f5d0c8"/><circle cx="3" cy="7" r="1.8" fill="#f5d0c8"/><circle cx="7" cy="5" r="1.8" fill="#f5d0c8"/><circle cx="10.5" cy="7" r="1.8" fill="#f5d0c8"/><ellipse cx="20" cy="14" rx="2.8" ry="3.2" fill="#f5d0c8"/><circle cx="17.5" cy="9.5" r="1.6" fill="#f5d0c8"/><circle cx="21" cy="8" r="1.6" fill="#f5d0c8"/><circle cx="24" cy="10" r="1.6" fill="#f5d0c8"/></svg>
+          <!-- Paper airplane — bottom-right -->
+          <svg class="gc-svg gc-svg-plane-br" viewBox="0 0 24 24" stroke="#b8922e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path fill="#f7eccc" d="M22 2l-7 20-4-9-9-4 20-7z"/><path fill="none" d="M22 2L11 13"/></svg>
+        </div>
         <p class="gc-back-note">Still choosing you.<br>Every single day.</p>
-        <div class="gc-back-divider">· · · 💛 · · ·</div>
+        <div class="gc-back-divider">· · · · · ·</div>
         <p class="gc-back-sub">Every fight, every laugh, every ordinary day —<br>I'd pick it all again.</p>
-        <div class="gc-back-deco-bottom">♡ &nbsp; ✦ &nbsp; ♡</div>
       </div>
 
       <!-- Right inside page (stationary base, behind cover when closed) -->
       <div class="gc-page-right" onclick="toggleCard()">
-        <div class="gc-back-deco-top">✦ &nbsp; 💛 &nbsp; ✦</div>
+        <!-- SVG hand-drawn doodles -->
+        <div class="gc-svg-layer" aria-hidden="true">
+          <!-- Sparkle cluster — top-left near title -->
+          <svg class="gc-svg gc-svg-sparkles-tl" viewBox="0 0 30 24" fill="none" stroke="#b8922e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v3M8 8v3M5 5.5h3M10 5.5h3"/><path d="M20 5v2M20 9v2M18 7.5h2M22 7.5h2" opacity=".7"/><path d="M26 1v1.5M26 4v1.5M24.5 2.8h1.5M27 2.8h1.5" opacity=".55"/></svg>
+          <!-- Smiley faces — top-right -->
+          <svg class="gc-svg gc-svg-smileys-tr" viewBox="0 0 32 18" stroke="#b09a78" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="9" r="7" fill="#fef6e4"/><circle cx="6.5" cy="7.5" r="0.8" fill="#b09a78" stroke="none"/><circle cx="11.5" cy="7.5" r="0.8" fill="#b09a78" stroke="none"/><path d="M6.5 11.5c1 1.5 3.5 1.5 5 0" fill="none"/><circle cx="23" cy="9" r="7" fill="#fef6e4"/><circle cx="20.5" cy="7.5" r="0.8" fill="#b09a78" stroke="none"/><circle cx="25.5" cy="7.5" r="0.8" fill="#b09a78" stroke="none"/><path d="M20.5 11.5c1 1.5 3.5 1.5 5 0" fill="none"/></svg>
+          <!-- Tiny hearts — scattered near heading -->
+          <svg class="gc-svg gc-svg-hearts-mid" viewBox="0 0 20 16" stroke="#c4787a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path fill="#f2c4c6" d="M5 8.5C5 8.5 1.5 6 1.5 4c0-1 .7-2 1.8-2s1.7 1 1.7 1 .6-1 1.7-1 1.8 1 1.8 2c0 2-3.5 4.5-3.5 4.5z"/><path fill="#f2c4c6" d="M14.5 12C14.5 12 12 10 12 8.5c0-.8.5-1.5 1.3-1.5s1.2.7 1.2.7.4-.7 1.2-.7 1.3.7 1.3 1.5c0 1.5-2.5 3.5-2.5 3.5z" opacity=".75"/></svg>
+          <!-- Infinity symbol — mid-right -->
+          <svg class="gc-svg gc-svg-infinity" viewBox="0 0 32 16" fill="none" stroke="#b07070" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8c-2-3-5-5.5-8-5.5S2 4.5 2 8s3 5.5 6 5.5 6-2.5 8-5.5c2 3 5 5.5 8 5.5s6-2 6-5.5-3-5.5-6-5.5-6 2.5-8 5.5z"/></svg>
+          <!-- Ring with sparkle — center-bottom -->
+          <svg class="gc-svg gc-svg-ring" viewBox="0 0 28 30" stroke="#b08a2e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="14" cy="19" rx="9" ry="8" fill="#f7eccc"/><path fill="#f7eccc" d="M9 13l5-9 5 9"/><path d="M9 13h10" fill="none"/><path d="M11 13l3-5 3 5" fill="none"/></svg>
+          <!-- Ring sparkle (animated) -->
+          <svg class="gc-svg gc-svg-ring-sparkle" viewBox="0 0 16 16" fill="none" stroke="#b8922e" stroke-width="1.6" stroke-linecap="round"><path d="M8 1v4M8 11v4M1 8h4M11 8h4M3 3l2.5 2.5M10.5 10.5L13 13M13 3l-2.5 2.5M5.5 10.5L3 13"/></svg>
+          <!-- Map pin — bottom-left -->
+          <svg class="gc-svg gc-svg-pin-bl" viewBox="0 0 20 26" stroke="#6e9966" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path fill="#d4edcf" d="M10 24S2 15 2 10a8 8 0 1116 0c0 5-8 14-8 14z"/><circle cx="10" cy="10" r="3" fill="#f5fff0"/></svg>
+          <!-- Small flower — bottom-right -->
+          <svg class="gc-svg gc-svg-flower-br" viewBox="0 0 22 22" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="8" r="2.5" stroke="#c47e72" fill="#f5d0c8"/><circle cx="8" cy="6" r="2" stroke="#c47e72" fill="#f5d0c8" opacity=".7"/><circle cx="14" cy="6" r="2" stroke="#c47e72" fill="#f5d0c8" opacity=".7"/><circle cx="8.5" cy="10.5" r="2" stroke="#c47e72" fill="#f5d0c8" opacity=".7"/><circle cx="13.5" cy="10.5" r="2" stroke="#c47e72" fill="#f5d0c8" opacity=".7"/><path d="M11 10.5v9" stroke="#7aab72"/><path d="M11 15c2.5-1.2 4-.8 5 .2" stroke="#7aab72"/></svg>
+        </div>
         <h2 class="gc-back-heading">Happy 2nd Engagement Anniversary, Sarthak ❤️</h2>
         <p class="gc-back-sub">A little celebration hidden inside our story.</p>
-        <div class="gc-back-divider">· · · 💛 · · ·</div>
-        <div class="gc-back-doodles">
-          <span>🌷</span><span>💌</span><span>🌹</span><span>✨</span><span>💐</span>
-        </div>
-        <div class="gc-back-deco-bottom">🌸 &nbsp; ✨ &nbsp; 🌺</div>
+        <div class="gc-back-divider">· · · · · ·</div>
       </div>
 
       <!-- Cover (on top, swings away from LEFT hinge, disappears past 90°) -->
