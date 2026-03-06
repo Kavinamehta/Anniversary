@@ -598,6 +598,9 @@
         </div>
       </div>
 
+      <!-- Hidden Gem Button (appears after Level 8 text animates in) -->
+      <button id="gem-btn" class="gem-btn" onclick="openGreetingCard()" style="display:none" aria-label="Open hidden anniversary surprise">💎</button>
+
       <div style="text-align:center;margin-top:24px">
         <button class="btn-secondary" onclick="resetAndRestart()" style="font-size:0.82rem">↩ Play Again from Start</button>
       </div>
@@ -606,6 +609,54 @@
   </section>
 
 </main>
+
+<!-- ══════════ GREETING CARD OVERLAY ══════════ -->
+<div id="greeting-card-overlay" class="gc-overlay" role="dialog" aria-modal="true" aria-label="Anniversary greeting card">
+  <div id="gc-petal-container" class="gc-petal-container" aria-hidden="true"></div>
+  <button id="gc-close-btn" class="gc-close-btn" onclick="closeGreetingCard()" style="display:none" aria-label="Close greeting card">✕</button>
+
+  <!-- Book: closed = single cover (W×H), open = spread (2W×H) -->
+  <div class="gc-scene" id="gc-scene">
+    <div class="gc-book" id="gc-card">
+
+      <!-- Left inside page (stationary, hidden behind cover when closed) -->
+      <div class="gc-page-left" onclick="toggleCard()">
+        <div class="gc-back-deco-top">🌸 &nbsp; ✨ &nbsp; 🌺</div>
+        <p class="gc-back-note">Still choosing you.<br>Every single day.</p>
+        <div class="gc-back-divider">· · · 💛 · · ·</div>
+        <p class="gc-back-sub">Every fight, every laugh, every ordinary day —<br>I'd pick it all again.</p>
+        <div class="gc-back-deco-bottom">♡ &nbsp; ✦ &nbsp; ♡</div>
+      </div>
+
+      <!-- Right inside page (stationary base, behind cover when closed) -->
+      <div class="gc-page-right" onclick="toggleCard()">
+        <div class="gc-back-deco-top">✦ &nbsp; 💛 &nbsp; ✦</div>
+        <h2 class="gc-back-heading">Happy 2nd Engagement Anniversary, Sarthak ❤️</h2>
+        <p class="gc-back-sub">A little celebration hidden inside our story.</p>
+        <div class="gc-back-divider">· · · 💛 · · ·</div>
+        <div class="gc-back-doodles">
+          <span>🌷</span><span>💌</span><span>🌹</span><span>✨</span><span>💐</span>
+        </div>
+        <div class="gc-back-deco-bottom">🌸 &nbsp; ✨ &nbsp; 🌺</div>
+      </div>
+
+      <!-- Cover (on top, swings away from LEFT hinge, disappears past 90°) -->
+      <div class="gc-cover" id="gc-cover" onclick="toggleCard()">
+        <div class="gc-doodle gc-doodle-tl">🌸</div>
+        <div class="gc-doodle gc-doodle-tr">✨</div>
+        <div class="gc-doodle gc-doodle-bl">💛</div>
+        <div class="gc-doodle gc-doodle-br">🌺</div>
+        <div class="gc-front-content">
+          <div class="gc-front-hearts">♡ &nbsp; ♡ &nbsp; ♡</div>
+          <p class="gc-front-label">Open the Card</p>
+          <div class="gc-front-stars">✦ &nbsp; ✦ &nbsp; ✦</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="script.js"></script>
 </body>

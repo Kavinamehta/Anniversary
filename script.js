@@ -1220,9 +1220,11 @@ function closeSideQuest() {
 /* ── Level 8: Future Mode ────────────────── */
 function showLevel8() {
   const reveal = $('#level8-reveal');
+  const gemBtn = $('#gem-btn');
   if (reveal.style.display === 'block') {
-    // Toggle off
+    // Toggle off — hide text and gem
     reveal.style.display = 'none';
+    if (gemBtn) { gemBtn.style.display = 'none'; }
     return;
   }
   reveal.style.display = 'block';
@@ -1234,6 +1236,88 @@ function showLevel8() {
     void el.offsetWidth; // force reflow
     el.style.animation = '';
   });
+
+  // Show gem button after text has finished animating (~3.2s)
+  if (gemBtn) {
+    gemBtn.style.display = 'none';
+    setTimeout(() => {
+      gemBtn.style.display = 'flex';
+    }, 3200);
+  }
+}
+
+/* ── Greeting Card ───────────────────────── */
+function openGreetingCard() {
+  const overlay = $('#greeting-card-overlay');
+  const book    = $('#gc-card');
+  const closeBtn = $('#gc-close-btn');
+  if (!overlay) return;
+  // Reset to closed state
+  if (book) book.classList.remove('open');
+  if (closeBtn) closeBtn.style.display = 'none';
+  overlay.classList.add('visible');
+}
+
+function toggleCard() {
+  const book     = $('#gc-card');
+  const closeBtn = $('#gc-close-btn');
+  if (!book) return;
+  const isOpen = book.classList.contains('open');
+  if (!isOpen) {
+    // Open: swing cover away from left hinge, burst petals
+    book.classList.add('open');
+    if (closeBtn) closeBtn.style.display = 'none';
+    createPetals();
+  } else {
+    // Close: fold cover back, reveal X button after animation
+    book.classList.remove('open');
+    if (closeBtn) {
+      setTimeout(() => { closeBtn.style.display = 'flex'; }, 750);
+    }
+  }
+}
+
+function createPetals() {
+  const symbols  = ['🌸','🌺','🌷','❤️','✨','💛','🌹','💮','🌼','🎀'];
+  const cardEl   = $('#gc-card');
+  if (!cardEl) return;
+  const rect = cardEl.getBoundingClientRect();
+  const cx   = rect.left + rect.width  / 2;
+  const cy   = rect.top  + rect.height / 2;
+
+  for (let i = 0; i < 32; i++) {
+    const petal = document.createElement('span');
+    petal.className  = 'gc-petal';
+    petal.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+
+    // Random burst direction and distance
+    const angle    = Math.random() * 360;
+    const distance = 50 + Math.random() * 130;
+    const startX   = cx + Math.cos(angle * Math.PI / 180) * distance * 0.3;
+    const startY   = cy + Math.sin(angle * Math.PI / 180) * distance * 0.3;
+
+    petal.style.left             = startX + 'px';
+    petal.style.top              = startY + 'px';
+    petal.style.fontSize         = (0.85 + Math.random() * 0.9) + 'rem';
+    petal.style.animationDelay   = (Math.random() * 0.45) + 's';
+    petal.style.animationDuration = (1.8 + Math.random() * 1.2) + 's';
+
+    document.body.appendChild(petal);
+    setTimeout(() => { if (petal.parentNode) petal.remove(); }, 3400);
+  }
+}
+
+function closeGreetingCard() {
+  const overlay  = $('#greeting-card-overlay');
+  const closeBtn = $('#gc-close-btn');
+  if (!overlay) return;
+  overlay.classList.remove('visible');
+  // Reset for next open
+  setTimeout(() => {
+    const book = $('#gc-card');
+    if (book)     book.classList.remove('open');
+    if (closeBtn) closeBtn.style.display = 'none';
+  }, 350);
 }
 
 /* ── Ring Easter Egg (💍 × 3 = Developer's Note) ── */
