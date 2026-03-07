@@ -30,6 +30,7 @@ const state = {
   countriesVisited: [],
   l5Scored: false,
   l4Scored: false,
+  level3Done: false,
   // Level 1 stage completion tracking
   l1s1Done: false,
   l1s2Done: false,
@@ -107,7 +108,7 @@ const MAX_SCORE = Object.values(SCORE_CONFIG).reduce((sum, c) => sum + c.points,
 /* ── All Possible Badges ────────────────── */
 const ALL_BADGES = [
   { id: 'first_move',    icon: '💌', name: 'First Move Made',        desc: 'Someone had the courage to say hi.' },
-  { id: 'ldr_activated', icon: '✈️', name: 'Long Distance Mode Activated', desc: 'Relationship official before departure.' },
+  { id: 'ldr_activated', icon: '✈️', name: 'Long Distance Mode Activated', desc: 'Relationship official along with Long Distance status' },
   { id: 'time_zones',    icon: '🌍', name: 'Survived Time Zones',    desc: 'Long distance? No problem.' },
   { id: 'boss_battle',   icon: '💍', name: 'Boss Battle Cleared',    desc: '+50 Commitment Points' },
   { id: 'patience',      icon: '🏅', name: 'Patience +100',          desc: 'Both families on board.' },
@@ -219,8 +220,11 @@ function showScreen(id) {
 
   // Golden Save Point button visibility (Level 3 only — shown after correct choice)
   const gsBtn = $('#golden-save-trigger');
-  // Always hide on level entry; it gets revealed by makeChoice3('yes')
-  gsBtn.classList.add('hidden');
+  if (id === 'level3' && state.level3Done) {
+    gsBtn.classList.remove('hidden');
+  } else {
+    gsBtn.classList.add('hidden');
+  }
 }
 
 /* ── Progress Bar ────────────────────────── */
@@ -605,6 +609,7 @@ function makeChoice3(choice) {
     if (gallery) gallery.classList.add('visible');
     addScore('level3');
     setTimeout(() => awardBadge('boss_battle'), 1000);
+    state.level3Done = true;
     // Reveal Golden Save Point button now that the correct choice is made
     setTimeout(() => $('#golden-save-trigger').classList.remove('hidden'), 800);
   }
