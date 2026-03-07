@@ -632,7 +632,7 @@ function doParentAction(type) {
   };
   const memBody = {
     you:     'Telling your parents was scary at few points. But we told them. And with that, came the tough part of convincing them. They listened. They worried. They eventually smiled.',
-    me:      'My family was already open to this possibility. Still, saying it out loud made it real. There were questions, there were long pauses, and then there was a "we just want you to be happy." That was enough. (And also beine Jain, but we don't need to go there 😉',
+    me:      'My family was already open to this possibility. Still, saying it out loud made it real. There were questions, there were long pauses, and then there was a "we just want you to be happy." That was enough. (And also being Jain, but we don\'t need to go there 😉)',
     miracle: 'We may or may not have sent a few hopeful thoughts into the universe. What? It works sometimes.',
   };
 
