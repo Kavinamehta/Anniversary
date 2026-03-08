@@ -673,22 +673,22 @@ function doCoopAction(type) {
   const memories = {
     grocery: {
       title: '🏙️ First City Explored',
-      body:  'Two people, one city to discover. You navigated streets, stumbled upon hidden spots, and made the unfamiliar feel like home — together.',
+      body:  'Even before we reached Hagen - our home - you came to pick me up at the airport andshowed me Frankfurt. You made the unfamiliar feel like home.',
       xp: 'Explorer XP +20',
     },
     cook: {
       title: '🍳 First Cooked Meal',
-      body:  'It was pasta. Simple. Slightly overcooked. Eaten at 9pm because someone (no one is naming names) kept insisting the water would boil faster if watched closely. Best meal ever.',
+      body:  'It was pizza. Simple. Perfect. And such that it became the best version that we still eat to this day.',
       xp: 'Cooking XP +25',
     },
     fight: {
       title: '🎓 First Day in University Together',
-      body:  'New campus, new chapter — but the best part was having each other to figure it all out with. From finding the right building to grabbing coffee after, it was the start of something new.',
+      body:  'It was all new for me, but you made it all soo easy for me - from figuring out class rooms to going for lunches, and even meeting new people. And although I didn\'t continue the course, I will cherish that experience of sitting in the classes together.',
       xp: 'Academic Teamwork +25',
     },
     sunday: {
       title: '🛒 First Grocery Raid',
-      body:  'The list said "essentials." You came back with three types of cheese, a candle, snacks you didn\'t need, and somehow forgot milk. Peak co-op behavior.',
+      body:  'Proof that our love can survive anything — including our first Lidl haul and the mystery of what exactly we were going to do with that red cabbage.',
       xp: 'Domestic Skill +12',
     },
   };
@@ -749,7 +749,7 @@ const MAP_LOCATIONS = {
   },
   netherlands: {
     title: '🇳🇱 Netherlands',
-    body: 'Amsterdam: canals, bikes everywhere, and the discovery that Dutch stroopwafels are dangerously good. Two people trying to figure out the right side of the cycle path, failing enthusiastically.',
+    body: 'A 72-hour sprint through five cities, from the windmills of Kinderdijk to the brushstrokes of Van Gogh, we conquered the Netherlands one missed bus at a time. We arrived in Gouda just in time for everything to close. We still ate that restaurant cheese platter with pride because we are nothing if not dedicated to the bit and we made that cheese count. Peak \'doing too much\' behavior.',
     xp: 'Travel XP +30', locked: false,
     coords: [52.37, 4.90],
     photos: [
@@ -773,8 +773,8 @@ const MAP_LOCATIONS = {
     coords: [50.08, 14.42],
   },
   // ─── Locked / Future DLC Countries ───
-  england:       { title: '🏴󠁧󠁢󠁥󠁮󠁧󠁿 England', body: 'London delivered — double-decker buses, the Thames at night, and streets that already felt strangely familiar. A city that moves fast but keeps every memory sharp.', xp: 'Travel XP +30', locked: false, coords: [51.51, -0.13], photos: [{ icon: '🎡', label: 'London Eye' }, { icon: '🌉', label: 'Tower Bridge' }, { icon: '🚌', label: 'Double Decker' }, { icon: '☕', label: 'London Breakfast' }] },
-  scotland:      { title: '🏴󠁧󠁢󠁳󠁣󠁴󠁿 Scotland', body: 'Edinburgh\'s old town has a way of slowing you down — cobblestone streets, the castle up on the hill, and a cold that somehow makes everything feel more memorable.', xp: 'Travel XP +30', locked: false, coords: [55.95, -3.19], photos: [{ icon: '🏰', label: 'Edinburgh Castle' }, { icon: '🌿', label: 'Highland Views' }, { icon: '🥃', label: 'Whisky Trail' }, { icon: '🌧️', label: 'Classic Scottish Weather' }] },
+  england:       { title: '🏴󠁧󠁢󠁥󠁮󠁧󠁿 England', body: 'London delivered — double-decker buses, the Thames at night, and streets that already felt strangely familiar. A trip thats gonna stay in our memories for a long long time.', xp: 'Travel XP +30', locked: false, coords: [51.51, -0.13], photos: [{ icon: '🎡', label: 'London Eye' }, { icon: '🌉', label: 'Tower Bridge' }, { icon: '🚌', label: 'Double Decker' }, { icon: '☕', label: 'London Breakfast' }] },
+  scotland:      { title: '🏴󠁧󠁢󠁳󠁣󠁴󠁿 Scotland', body: 'The itinerary said breathtaking Highlands. We came back with wind-swept hair, 400 photos of the Glenfinnan Viaduct, and a 1000 more of the highlands. Peak road trip behavior.', xp: 'Travel XP +30', locked: false, coords: [55.95, -3.19], photos: [{ icon: '🏰', label: 'Edinburgh Castle' }, { icon: '🌿', label: 'Highland Views' }, { icon: '🥃', label: 'Whisky Trail' }, { icon: '🌧️', label: 'Classic Scottish Weather' }] },
   ireland:       { title: '🇮🇪 Ireland – Future DLC', body: '🔒 Locked. Green hills, cozy pubs, and the accent you never get tired of hearing. Coming soon™.', xp: null, locked: true, coords: [53.35, -6.26] },
   spain:         { title: '🇪🇸 Spain – Future DLC', body: '🔒 Locked. Sun, tapas, and a Mediterranean coast that\'s been on the list for a while.', xp: null, locked: true, coords: [40.42, -3.70] },
   portugal:      { title: '🇵🇹 Portugal – Future DLC', body: '🔒 Locked. Pastéis de nata, tram rides through Lisbon, and sunsets over the Atlantic. On the roadmap.', xp: null, locked: true, coords: [38.72, -9.14] },
@@ -783,10 +783,10 @@ const MAP_LOCATIONS = {
   norway:        { title: '🇳🇴 Norway – Future DLC', body: '🔒 Locked. Fjords, northern lights, and really expensive coffee. Pending expansion pack.', xp: null, locked: true, coords: [59.91, 10.75] },
   sweden:        { title: '🇸🇪 Sweden – Future DLC', body: '🔒 Locked. IKEA homeland, meatballs, and cities that look like they belong in a Scandinavian drama.', xp: null, locked: true, coords: [59.33, 18.07] },
   finland:       { title: '🇫🇮 Finland – Future DLC', body: '🔒 Locked. Saunas, silence, and the world\'s happiest country. Maybe that\'s what we need.', xp: null, locked: true, coords: [60.17, 24.94] },
-  denmark:       { title: '🇩🇰 Denmark', body: 'Copenhagen showed us what hygge actually means: canals, colourful Nyhavn houses, and a city that just feels instantly comfortable. Great pastries too — significantly above average.', xp: 'Travel XP +28', locked: false, coords: [55.68, 12.57], photos: [{ icon: '🌈', label: 'Nyhavn Harbour' }, { icon: '🥐', label: 'Danish Pastries' }, { icon: '🚲', label: 'City Cycling' }, { icon: '🏰', label: 'Kronborg Castle' }] },
+  denmark:       { title: '🇩🇰 Denmark', body: 'Copenhagen showed us what hygge actually means: canals, colourful Nyhavn houses, and a city that just feels instantly comfortable, but modern. Tivoli experience tops the list.', xp: 'Travel XP +28', locked: false, coords: [55.68, 12.57], photos: [{ icon: '🌈', label: 'Nyhavn Harbour' }, { icon: '🥐', label: 'Danish Pastries' }, { icon: '🚲', label: 'City Cycling' }, { icon: '🏰', label: 'Kronborg Castle' }] },
   poland:        { title: '🇵🇱 Poland – Future DLC', body: '🔒 Locked. Pierogi, old towns, and a country with more history per square meter than most.', xp: null, locked: true, coords: [52.23, 21.01] },
   switzerland:   { title: '🇨🇭 Switzerland – Future DLC', body: '🔒 Locked. Mountains, chocolate, and the kind of precision that makes German trains look casual.', xp: null, locked: true, coords: [46.95, 7.45] },
-  hungary:       { title: '🇭🇺 Hungary', body: 'Budapest split across two riverbanks, each one with a completely different personality. Thermal baths, ruin bars, and a Parliament building that looks like it was designed to be dramatic on purpose.', xp: 'Travel XP +28', locked: false, coords: [47.50, 19.04], photos: [{ icon: '🛁', label: 'Thermal Baths' }, { icon: '🏛️', label: 'Parliament Building' }, { icon: '🍷', label: 'Ruin Bar Night' }, { icon: '🌉', label: 'Chain Bridge' }] },
+  hungary:       { title: '🇭🇺 Hungary', body: 'Five days in a Budapest heat wave with only one working phone and a map of every repair shop in the city. Somehow, it was still a perfect trip. Peak "we can survive anything" behavior.', xp: 'Travel XP +28', locked: false, coords: [47.50, 19.04], photos: [{ icon: '🛁', label: 'Thermal Baths' }, { icon: '🏛️', label: 'Parliament Building' }, { icon: '🍷', label: 'Ruin Bar Night' }, { icon: '🌉', label: 'Chain Bridge' }] },
   romania:       { title: '🇷🇴 Romania – Future DLC', body: '🔒 Locked. Dracula\'s castle and the Carpathian mountains. Bonus spooky DLC.', xp: null, locked: true, coords: [44.43, 26.10] },
   croatia:       { title: '🇭🇷 Croatia – Future DLC', body: '🔒 Locked. Dubrovnik, island hopping, and the Adriatic Sea. Eventually.', xp: null, locked: true, coords: [45.81, 15.98] },
   belgium:       { title: '🇧🇪 Belgium – Future DLC', body: '🔒 Locked. Waffles, chocolate, and a country that can\'t decide which language to speak.', xp: null, locked: true, coords: [50.85, 4.35] },
@@ -797,7 +797,7 @@ const MAP_LOCATIONS = {
   estonia:       { title: '🇪🇪 Estonia – Future DLC', body: '🔒 Locked. Tallinn\'s medieval old town. The most digital country in the world.', xp: null, locked: true, coords: [59.44, 24.75] },
   latvia:        { title: '🇱🇻 Latvia – Future DLC', body: '🔒 Locked. Riga\'s art nouveau and the best black balsam you\'ve never tried.', xp: null, locked: true, coords: [56.95, 24.11] },
   lithuania:     { title: '🇱🇹 Lithuania – Future DLC', body: '🔒 Locked. Vilnius, amber, and Hill of Crosses. Baltic charm.', xp: null, locked: true, coords: [54.69, 25.28] },
-  luxembourg:    { title: '🇱🇺 Luxembourg', body: 'One of those places where you walk around and realise how much character a small country can pack in. Medieval fortifications, gorges, and a capital that genuinely surprised us.', xp: 'Travel XP +25', locked: false, coords: [49.61, 6.13], photos: [{ icon: '🏰', label: 'Bock Casemates' }, { icon: '🌉', label: 'Adolphe Bridge' }, { icon: '🌿', label: 'Pétrusse Valley' }, { icon: '🇱🇺', label: 'Grand Duchy' }] },
+  luxembourg:    { title: '🇱🇺 Luxembourg', body: 'Why do a day trip when you can turn a movie run into an international event? Two days, two countries, and one theater that finally spoke our language. Peak going the extra mile behavior.', xp: 'Travel XP +25', locked: false, coords: [49.61, 6.13], photos: [{ icon: '🏰', label: 'Bock Casemates' }, { icon: '🌉', label: 'Adolphe Bridge' }, { icon: '🌿', label: 'Pétrusse Valley' }, { icon: '🇱🇺', label: 'Grand Duchy' }] },
   liechtenstein:  { title: '🇱🇮 Liechtenstein – Future DLC', body: '🔒 Locked. An entire country you can jog across. Alpine vibes.', xp: null, locked: true, coords: [47.16, 9.55] },
   slovenia:      { title: '🇸🇮 Slovenia – Future DLC', body: '🔒 Locked. Lake Bled and Ljubljana. Europe\'s best-kept secret.', xp: null, locked: true, coords: [46.05, 14.51] },
   bosnia:        { title: '🇧🇦 Bosnia & Herzegovina – Future DLC', body: '🔒 Locked. Mostar Bridge and Ottoman heritage. Deep history.', xp: null, locked: true, coords: [43.86, 18.41] },
