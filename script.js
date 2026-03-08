@@ -81,10 +81,10 @@ const SCORE_CONFIG = {
   level3:       { points: 50,  label: 'Level 3 – Proposal',          category: 'leap_of_faith' },
   level4:       { points: 20,  label: 'Level 4 – Parents',           category: 'trust' },
   level5:       { points: 10,  label: 'Level 5 – Engagement',        category: 'commitment' },
-  coop_grocery: { points: 10,  label: 'Co-Op: Grocery Raid',         category: 'teamwork' },
+  coop_grocery: { points: 10,  label: 'Co-Op: First City Explored',  category: 'teamwork' },
   coop_cook:    { points: 10,  label: 'Co-Op: First Meal',           category: 'teamwork' },
-  coop_fight:   { points: 10,  label: 'Co-Op: First Fight',          category: 'trust' },
-  coop_sunday:  { points: 10,  label: 'Co-Op: Lazy Sunday',          category: 'playfulness' },
+  coop_fight:   { points: 10,  label: 'Co-Op: University Together',  category: 'teamwork' },
+  coop_sunday:  { points: 10,  label: 'Co-Op: Grocery Raid',         category: 'teamwork' },
   bonus_grocery:  { points: 5, label: 'Bonus: Grocery Raid',         category: 'teamwork' },
   bonus_cooking:  { points: 5, label: 'Bonus: Cooking',              category: 'teamwork' },
   bonus_pokemon:  { points: 5, label: 'Bonus: Pokémon Go',           category: 'playfulness' },
@@ -672,9 +672,9 @@ function initLevel6() {
 function doCoopAction(type) {
   const memories = {
     grocery: {
-      title: '🛒 First Grocery Raid',
-      body:  'The list said "essentials." We came back with three types of cheese, a candle, snacks we didn\'t need, and somehow forgot milk. Peak co-op behavior.',
-      xp: 'Domestic Skill +12',
+      title: '🏙️ First City Explored',
+      body:  'Two people, one city to discover. You navigated streets, stumbled upon hidden spots, and made the unfamiliar feel like home — together.',
+      xp: 'Explorer XP +20',
     },
     cook: {
       title: '🍳 First Cooked Meal',
@@ -682,14 +682,14 @@ function doCoopAction(type) {
       xp: 'Cooking XP +25',
     },
     fight: {
-      title: '🌩️ First Real Fight',
-      body:  'It was about something small. Or maybe it wasn\'t. Either way, it ended with honesty, a bit of silence, and then someone making tea as a peace offering. We learned something that day.',
-      xp: 'Emotional Intelligence +30',
+      title: '🎓 First Day in University Together',
+      body:  'New campus, new chapter — but the best part was having each other to figure it all out with. From finding the right building to grabbing coffee after, it was the start of something new.',
+      xp: 'Academic Teamwork +25',
     },
     sunday: {
-      title: '☀️ First Lazy Sunday',
-      body:  'No alarms. No plans. Breakfast at noon. Two people on the same couch, half-watching something, half-just-existing-together. The best kind of nothing.',
-      xp: 'Comfort Level +40',
+      title: '🛒 First Grocery Raid',
+      body:  'The list said "essentials." You came back with three types of cheese, a candle, snacks you didn\'t need, and somehow forgot milk. Peak co-op behavior.',
+      xp: 'Domestic Skill +12',
     },
   };
 
@@ -697,10 +697,10 @@ function doCoopAction(type) {
   if (!m) return;
 
   const photos = {
-    grocery: [{ icon: '🛒', label: 'Add Grocery Photo' }],
+    grocery: [{ icon: '🏙️', label: 'Add City Photo' }],
     cook:    [{ icon: '🍳', label: 'Add Meal Photo' }],
-    fight:   [{ icon: '🌩️', label: 'Add Peace Offering Photo' }],
-    sunday:  [{ icon: '☀️', label: 'Add Lazy Day Photo' }],
+    fight:   [{ icon: '🎓', label: 'Add University Photo' }],
+    sunday:  [{ icon: '🛒', label: 'Add Grocery Photo' }],
   };
 
   openModal(m.title, m.body, null, m.xp, photos[type] || null);
